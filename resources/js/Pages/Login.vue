@@ -1,40 +1,47 @@
 <template>
-    <div class="login-container">
-        <div class="header">
-            <div class="logo-container">
-                <img src="/favicon.ico" alt="Logo" class="logo" />
-                <span class="logo-text">DentHub</span>
+    <div
+        class="d-flex justify-content-center align-items-center vh-100 bg-light"
+    >
+        <div class="login-container">
+            <div class="header text-center mb-4">
+                <div
+                    class="logo-container d-flex align-items-center justify-content-center"
+                >
+                    <img src="/favicon.ico" alt="Logo" class="logo me-2" />
+                    <span class="logo-text h1 fw-bold">DentHub</span>
+                </div>
             </div>
-        </div>
-        <div class="content">
-            <h1 style="text-align: center">Conectează-te</h1>
-
-            <form @submit.prevent="login" class="form-container">
-                <div class="input-group mb-3 w-100">
-                    <input
-                        type="text"
-                        class="form-control"
-                        placeholder="Email"
-                        v-model="email"
-                    />
+            <div class="content">
+                <h1 class="text-center">Conectează-te</h1>
+                <form @submit.prevent="login" class="form-container">
+                    <div class="input-group mb-3 w-100">
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Email"
+                            v-model="email"
+                        />
+                    </div>
+                    <div class="input-group mb-3">
+                        <input
+                            type="password"
+                            class="form-control"
+                            placeholder="Parolă"
+                            v-model="password"
+                        />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        Conectează-te
+                    </button>
+                </form>
+                <div class="register-link mt-3 text-center">
+                    <p>
+                        Nu ai un cont?
+                        <a href="#" class="text-primary"
+                            >Înregistrează-te aici</a
+                        >.
+                    </p>
                 </div>
-                <div class="input-group mb-3">
-                    <input
-                        type="password"
-                        class="form-control"
-                        placeholder="Parolă"
-                        v-model="password"
-                    />
-                </div>
-                <button type="submit" class="btn btn-primary">
-                    Conectează-te
-                </button>
-            </form>
-            <div class="register-link">
-                <p>
-                    Nu ai un cont?
-                    <a href="#">Înregistrează-te aici</a>.
-                </p>
             </div>
         </div>
     </div>
@@ -57,41 +64,15 @@ export default {
 </script>
 
 <style>
-html,
-body {
-    height: 100%;
-    margin: 0;
-    background-color: #efefef;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .login-container {
     max-width: 700px;
     width: 500px;
     padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.header {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-bottom: 2rem; /* Adjust this to increase space below the header */
-}
-
-.logo-container {
-    display: flex;
-    align-items: center;
 }
 
 .logo {
     width: 100px;
     height: 100px;
-    margin-right: 10px; /* Add space between the logo image and the text */
 }
 
 .logo-text {
@@ -99,35 +80,11 @@ body {
     font-weight: bold;
 }
 
-.content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     width: 100%;
-}
-
-.btn {
-    width: 100%;
-}
-
-.register-link {
-    margin-top: 1rem; /* Adjust this to control the space above the register link */
-    text-align: center;
-}
-
-.register-link a {
-    color: #007bff;
-    text-decoration: none;
 }
 
 .register-link a:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 </style>
