@@ -60,6 +60,10 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        if ($user->cui !== null) {
+            return redirect()->route('dashboard');
+        } else {
+            return redirect()->route('welcome');
+        }
     }
 }
