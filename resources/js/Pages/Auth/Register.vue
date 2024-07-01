@@ -1,103 +1,232 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { ref } from "vue";
+import GuestLayout from "@/Layouts/GuestLayout.vue";
+import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import TextInput from "@/Components/TextInput.vue";
+import { Head, Link, useForm } from "@inertiajs/vue3";
+
+const selectedTab = ref("client"); // Track the selected tab
 
 const form = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
+    name: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+    cui: "",
 });
 
 const submit = () => {
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
+    form.post(route("store"), {
+        onFinish: () => {
+            if (selectedTab.value === "client") {
+                form.reset("password", "password_confirmation");
+            } else {
+                form.reset("password", "password_confirmation", "cui");
+            }
+        },
     });
+};
+
+const switchTab = (tab) => {
+    selectedTab.value = tab;
 };
 </script>
 
 <template>
     <GuestLayout>
-        <Head title="Register" />
+        <Head title="Crează un cont nou" />
+
+        <div class="tabs">
+            <button
+                @click="switchTab('client')"
+                :class="{ active: selectedTab === 'client' }"
+            >
+                Persoană fizică
+            </button>
+            <button
+                @click="switchTab('dentist')"
+                :class="{ active: selectedTab === 'dentist' }"
+            >
+                Persoană juridică
+            </button>
+        </div>
 
         <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
+            <template v-if="selectedTab === 'client'">
+                <div>
+                    <InputLabel for="name" value="Nume" />
+                    <TextInput
+                        id="name"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.name"
+                        required
+                        autofocus
+                        autocomplete="name"
+                    />
+                    <InputError class="mt-2" :message="form.errors.name" />
+                </div>
 
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
+                <div class="mt-4">
+                    <InputLabel for="email" value="Email" />
+                    <TextInput
+                        id="email"
+                        type="email"
+                        class="mt-1 block w-full"
+                        v-model="form.email"
+                        required
+                        autocomplete="username"
+                    />
+                    <InputError class="mt-2" :message="form.errors.email" />
+                </div>
 
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
+                <div class="mt-4">
+                    <InputLabel for="password" value="Parolă" />
+                    <TextInput
+                        id="password"
+                        type="password"
+                        class="mt-1 block w-full"
+                        v-model="form.password"
+                        required
+                        autocomplete="new-password"
+                    />
+                    <InputError class="mt-2" :message="form.errors.password" />
+                </div>
 
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
+                <div class="mt-4">
+                    <InputLabel
+                        for="password_confirmation"
+                        value="Confirmă parola"
+                    />
+                    <TextInput
+                        id="password_confirmation"
+                        type="password"
+                        class="mt-1 block w-full"
+                        v-model="form.password_confirmation"
+                        required
+                        autocomplete="new-password"
+                    />
+                    <InputError
+                        class="mt-2"
+                        :message="form.errors.password_confirmation"
+                    />
+                </div>
+            </template>
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
+            <template v-if="selectedTab === 'dentist'">
+                <div>
+                    <InputLabel for="name" value="Nume" />
+                    <TextInput
+                        id="name"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.name"
+                        required
+                        autofocus
+                        autocomplete="name"
+                    />
+                    <InputError class="mt-2" :message="form.errors.name" />
+                </div>
 
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
+                <div class="mt-4">
+                    <InputLabel for="cui" value="CUI" />
+                    <TextInput
+                        id="cui"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.cui"
+                        required
+                        autofocus
+                        autocomplete="cui"
+                    />
+                    <InputError class="mt-2" :message="form.errors.cui" />
+                </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+                <div class="mt-4">
+                    <InputLabel for="email" value="Email" />
+                    <TextInput
+                        id="email"
+                        type="email"
+                        class="mt-1 block w-full"
+                        v-model="form.email"
+                        required
+                        autocomplete="username"
+                    />
+                    <InputError class="mt-2" :message="form.errors.email" />
+                </div>
 
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
+                <div class="mt-4">
+                    <InputLabel for="password" value="Parolă" />
+                    <TextInput
+                        id="password"
+                        type="password"
+                        class="mt-1 block w-full"
+                        v-model="form.password"
+                        required
+                        autocomplete="new-password"
+                    />
+                    <InputError class="mt-2" :message="form.errors.password" />
+                </div>
 
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
-            </div>
+                <div class="mt-4">
+                    <InputLabel
+                        for="password_confirmation"
+                        value="Confirmă parola"
+                    />
+                    <TextInput
+                        id="password_confirmation"
+                        type="password"
+                        class="mt-1 block w-full"
+                        v-model="form.password_confirmation"
+                        required
+                        autocomplete="new-password"
+                    />
+                    <InputError
+                        class="mt-2"
+                        :message="form.errors.password_confirmation"
+                    />
+                </div>
+            </template>
 
             <div class="flex items-center justify-end mt-4">
-                <Link
+                <!-- <Link
                     :href="route('login')"
                     class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                     Already registered?
-                </Link>
+                </Link> -->
 
-                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
+                <PrimaryButton
+                    class="ms-4"
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                >
+                    Crează cont
                 </PrimaryButton>
             </div>
         </form>
     </GuestLayout>
 </template>
+
+<style scoped>
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tabs button {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    background-color: #f3f4f6;
+    border-radius: 5px;
+}
+
+.tabs button.active {
+    background-color: #4f46e5;
+    color: white;
+}
+</style>
