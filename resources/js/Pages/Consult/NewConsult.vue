@@ -18,12 +18,16 @@ const props = defineProps({
 
 const form = useForm({
     doctor: "",
-    service: "",
-    description: "",
-    price: 0,
     address: "",
     city: "",
     county: "",
+    services: [
+        {
+            service: "",
+            price: 0,
+            description: "",
+        },
+    ],
 });
 
 const cities = ref([]);
@@ -39,6 +43,14 @@ watch(
         updateCities(newCounty);
     }
 );
+
+const addService = () => {
+    form.services.push({
+        service: "",
+        price: 0,
+        description: "",
+    });
+};
 
 const submit = () => {
     form.post(route("consult.store"), {
@@ -76,60 +88,92 @@ const submit = () => {
                             </div>
 
                             <!-- Service and Price -->
-                            <div class="mt-4 flex space-x-4">
-                                <div class="flex-1">
-                                    <InputLabel
-                                        for="service"
-                                        value="Serviciul oferit"
-                                    />
-                                    <TextInput
-                                        id="service"
-                                        type="text"
-                                        class="mt-1 block w-full"
-                                        v-model="form.service"
-                                        required
-                                    />
-                                    <InputError
-                                        class="mt-2"
-                                        :message="form.errors.service"
-                                    />
+                            <div
+                                v-for="(service, index) in form.services"
+                                :key="index"
+                                class="mt-4 flex flex-col space-y-4"
+                            >
+                                <div class="flex space-x-4">
+                                    <div class="flex-1">
+                                        <InputLabel
+                                            :for="`service-${index}`"
+                                            value="Serviciul oferit"
+                                        />
+                                        <TextInput
+                                            :id="`service-${index}`"
+                                            type="text"
+                                            class="mt-1 block w-full"
+                                            v-model="service.service"
+                                            required
+                                        />
+                                        <InputError
+                                            class="mt-2"
+                                            :message="
+                                                form.errors[
+                                                    `services.${index}.service`
+                                                ]
+                                            "
+                                        />
+                                    </div>
+
+                                    <div class="flex-1">
+                                        <InputLabel
+                                            :for="`price-${index}`"
+                                            value="Preț"
+                                        />
+                                        <NumberInput
+                                            :id="`price-${index}`"
+                                            type="text"
+                                            class="mt-1 block w-full"
+                                            v-model="service.price"
+                                            required
+                                        />
+                                        <InputError
+                                            class="mt-2"
+                                            :message="
+                                                form.errors[
+                                                    `services.${index}.price`
+                                                ]
+                                            "
+                                        />
+                                    </div>
                                 </div>
 
-                                <div class="flex-1">
-                                    <InputLabel for="price" value="Preț" />
-                                    <NumberInput
-                                        id="price"
-                                        type="text"
+                                <!-- Descrierea serviciului -->
+                                <div>
+                                    <InputLabel
+                                        :for="`description-${index}`"
+                                        value="Descrierea serviciului"
+                                    />
+                                    <TextareaInput
+                                        :id="`description-${index}`"
+                                        type="textarea"
                                         class="mt-1 block w-full"
-                                        v-model="form.price"
+                                        v-model="service.description"
                                         required
                                     />
                                     <InputError
                                         class="mt-2"
-                                        :message="form.errors.price"
+                                        :message="
+                                            form.errors[
+                                                `services.${index}.description`
+                                            ]
+                                        "
                                     />
                                 </div>
                             </div>
 
-                            <!-- Descrierea serviciului -->
+                            <!-- Add new service button -->
                             <div class="mt-4">
-                                <InputLabel
-                                    for="description"
-                                    value="Descrierea serviciului"
-                                />
-
-                                <TextareaInput
-                                    id="description"
-                                    type="textarea"
-                                    class="mt-1 block w-full"
-                                    v-model="form.description"
-                                    required
-                                />
-
-                                <InputError
-                                    class="mt-2"
-                                    :message="form.errors.description"
-                                />
+                                <button
+                                    type="button"
+                                    @click="addService"
+                                    style="width: 100%"
+                                    class="inline-flex items-center justify-center text-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:shadow-outline-blue disabled:opacity-25 transition ease-in-out duration-150"
+                                >
+                                    <i class="fas fa-plus mr-2"></i>
+                                    Adaugă Serviciu
+                                </button>
                             </div>
 
                             <!-- Adresa completa-->

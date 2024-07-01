@@ -23,26 +23,34 @@ class ConsultController extends Controller
     {
         $request->validate([
             'doctor' => 'required|string|max:255',
-            'service' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
             'address' => 'required|string|max:255',
             'city' => 'required|integer|exists:cities,id',
             'county' => 'required|integer|exists:counties,id',
+            'services.*.service' => 'required|string|max:255',
+            'services.*.description' => 'required|string',
+            'services.*.price' => 'required|numeric',
         ]);
 
-        $consultData = [
-            'doctor' => $request->doctor,
-            'service' => $request->service,
-            'description' => $request->description,
-            'price' => $request->price,
-            'address' => $request->address,
-            'city_id' => $request->city,
-            'county_id' => $request->county,
-        ];
+        foreach ($request->services as $serviceData) {
+            $consultData = [
+                'doctor' => $request->doctor,
+                'service' => $serviceData['service'],
+                'description' => $serviceData['description'],
+                'price' => $serviceData['price'],
+                'address' => $request->address,
+                'city_id' => $request->city,
+                'county_id' => $request->county,
+            ];
 
-        Consult::create($consultData);
+            Consult::create($consultData);
+        }
 
+        return redirect()->route('dashboard');
+    }
+
+    public function destroy(Consult $consult)
+    {
+        $consult->delete();
         return redirect()->route('dashboard');
     }
 }

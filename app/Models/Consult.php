@@ -18,4 +18,14 @@ class Consult extends Model
         'city_id',
         'county_id',
     ];
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function county()
+    {
+        return $this->belongsTo(County::class);
+    }
 }
