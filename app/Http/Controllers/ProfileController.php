@@ -29,13 +29,24 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validatedData = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Only update the cui if it is present in the request
+        if ($request->has('cui')) {
+            $validatedData['cui'] = $request->input('cui');
+        } else {
+            // Set cui to null if it's not provided
+            $validatedData['cui'] = null;
         }
 
-        $request->user()->save();
+        $user->fill($validatedData);
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
 
         return Redirect::route('profile.edit');
     }
