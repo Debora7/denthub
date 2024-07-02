@@ -31,6 +31,8 @@ class ConsultController extends Controller
             'services.*.price' => 'required|numeric',
         ]);
 
+        $user = auth()->user();
+
         foreach ($request->services as $serviceData) {
             $consultData = [
                 'doctor' => $request->doctor,
@@ -40,6 +42,7 @@ class ConsultController extends Controller
                 'address' => $request->address,
                 'city_id' => $request->city,
                 'county_id' => $request->county,
+                'user_id' => $user->id,
             ];
 
             Consult::create($consultData);

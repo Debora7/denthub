@@ -17,6 +17,7 @@ class Consult extends Model
         'address',
         'city_id',
         'county_id',
+        'user_id',
     ];
 
     public function city()
@@ -27,5 +28,10 @@ class Consult extends Model
     public function county()
     {
         return $this->belongsTo(County::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
