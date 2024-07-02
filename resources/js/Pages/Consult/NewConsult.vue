@@ -60,7 +60,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Serviciu nou" />
 
     <AuthenticatedLayout>
         <div class="py-12">
