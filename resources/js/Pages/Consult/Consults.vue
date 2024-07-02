@@ -20,7 +20,7 @@ const deleteConsult = (id) => {
 </script>
 
 <template>
-    <Head title="Servicii" />
+    <Head title="Servicii oferite" />
 
     <AuthenticatedLayout>
         <div class="py-12">
