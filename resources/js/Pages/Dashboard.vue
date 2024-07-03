@@ -9,6 +9,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import NumberInput from "@/Components/NumberInput.vue";
 import TextareaInput from "@/Components/TextareaInput.vue";
+import DangerButton from "@/Components/DangerButton.vue";
 
 const props = defineProps({
     consults: Array,
@@ -517,7 +518,7 @@ const deleteConsult = () => {
                         Ești sigur că vrei să ștergi următorul serviciu?
                     </h2>
 
-                    <form @submit.prevent="deleteConsult">
+                    <form>
                         <!-- Medic -->
                         <div>
                             <InputLabel for="doctor" value="Medic" />
@@ -617,13 +618,20 @@ const deleteConsult = () => {
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-end mt-4">
-                            <PrimaryButton
-                                class="ms-4"
+                        <div class="mt-6 flex justify-end">
+                            <DangerButton
                                 :class="{ 'opacity-25': form.processing }"
                                 :disabled="form.processing"
+                                @click="deleteConsult"
                             >
                                 Șterge
+                            </DangerButton>
+
+                            <PrimaryButton
+                                @click="closeModalDelete"
+                                class="ms-3"
+                            >
+                                Închide
                             </PrimaryButton>
                         </div>
                     </form>
