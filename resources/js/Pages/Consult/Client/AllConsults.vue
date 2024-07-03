@@ -8,10 +8,13 @@ const props = defineProps({
 });
 
 const searchQuery = ref("");
+const currentPage = ref(1);
+const itemsPerPageOptions = [1, 2, 3, 4, 5];
+const itemsPerPage = ref(itemsPerPageOptions[0]);
 
 const filteredConsults = computed(() => {
+    const searchLower = searchQuery.value.toLowerCase();
     return props.consults.filter((consult) => {
-        const searchLower = searchQuery.value.toLowerCase();
         return (
             consult.doctor.toLowerCase().includes(searchLower) ||
             consult.service.toLowerCase().includes(searchLower) ||
@@ -20,6 +23,27 @@ const filteredConsults = computed(() => {
         );
     });
 });
+
+const paginatedConsults = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage.value;
+    const end = start + itemsPerPage.value;
+    return filteredConsults.value.slice(start, end);
+});
+
+const totalPages = computed(() => {
+    return Math.ceil(filteredConsults.value.length / itemsPerPage.value);
+});
+
+const changePage = (page) => {
+    if (page >= 1 && page <= totalPages.value) {
+        currentPage.value = page;
+    }
+};
+
+const changeItemsPerPage = (event) => {
+    itemsPerPage.value = parseInt(event.target.value);
+    currentPage.value = 1; // Reset to first page on items per page change
+};
 </script>
 
 <template>
@@ -47,10 +71,10 @@ const filteredConsults = computed(() => {
                         />
                     </div>
                 </div>
-                <div v-if="filteredConsults.length > 0">
+                <div v-if="paginatedConsults.length > 0">
                     <div
                         class="card mb-2"
-                        v-for="consult in filteredConsults"
+                        v-for="consult in paginatedConsults"
                         :key="consult.id"
                     >
                         <div class="card-body">
@@ -88,6 +112,92 @@ const filteredConsults = computed(() => {
                             </div>
                         </div>
                     </div>
+                    <nav
+                        class="d-flex justify-content-center align-items-center"
+                    >
+                        <ul class="pagination mb-0 custom-pagination">
+                            <li
+                                class="page-item"
+                                :class="{ disabled: currentPage === 1 }"
+                            >
+                                <a
+                                    class="page-link"
+                                    href="#"
+                                    @click.prevent="changePage(1)"
+                                >
+                                    <<
+                                </a>
+                            </li>
+                            <li
+                                class="page-item"
+                                :class="{ disabled: currentPage === 1 }"
+                            >
+                                <a
+                                    class="page-link"
+                                    href="#"
+                                    @click.prevent="changePage(currentPage - 1)"
+                                >
+                                    <
+                                </a>
+                            </li>
+                            <li
+                                class="page-item"
+                                v-for="page in totalPages"
+                                :key="page"
+                                :class="{ active: page === currentPage }"
+                            >
+                                <a
+                                    class="page-link"
+                                    href="#"
+                                    @click.prevent="changePage(page)"
+                                >
+                                    {{ page }}
+                                </a>
+                            </li>
+                            <li
+                                class="page-item"
+                                :class="{
+                                    disabled: currentPage === totalPages,
+                                }"
+                            >
+                                <a
+                                    class="page-link"
+                                    href="#"
+                                    @click.prevent="changePage(currentPage + 1)"
+                                >
+                                    >
+                                </a>
+                            </li>
+                            <li
+                                class="page-item"
+                                :class="{
+                                    disabled: currentPage === totalPages,
+                                }"
+                            >
+                                <a
+                                    class="page-link"
+                                    href="#"
+                                    @click.prevent="changePage(totalPages)"
+                                >
+                                    >>
+                                </a>
+                            </li>
+                        </ul>
+                        <select
+                            class="form-select form-select-sm ms-3"
+                            @change="changeItemsPerPage"
+                            :value="itemsPerPage"
+                            style="width: auto"
+                        >
+                            <option
+                                v-for="option in itemsPerPageOptions"
+                                :key="option"
+                                :value="option"
+                            >
+                                {{ option }}
+                            </option>
+                        </select>
+                    </nav>
                 </div>
                 <div v-else>
                     <div
@@ -102,3 +212,25 @@ const filteredConsults = computed(() => {
         </div>
     </AuthenticatedLayout>
 </template>
+
+<style scoped>
+.custom-pagination .page-item .page-link {
+    border: none;
+    background-color: transparent;
+    margin: 0 5px;
+    color: #6c757d;
+}
+
+.custom-pagination .page-item.disabled .page-link {
+    color: #6c757d;
+}
+
+.custom-pagination .page-item.active .page-link {
+    color: #6c757d;
+    font-weight: bold;
+}
+
+.custom-pagination .page-item:hover .page-link {
+    text-decoration: none;
+}
+</style>
