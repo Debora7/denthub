@@ -43,7 +43,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/index', [ConsultClientController::class, 'index'])->name('index');
 
             Route::prefix('appointment')->name('appointment.')->group(function () {
-                Route::post('/store', [AppointmentController::class, 'store'])->name('appointment');
+                Route::post('/store', [AppointmentController::class, 'store'])->name('store');
             });
         });
     });
