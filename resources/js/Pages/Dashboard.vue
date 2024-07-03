@@ -18,7 +18,7 @@ const deleteConsult = (id) => {
 };
 
 const currentPage = ref(1);
-const itemsPerPageOptions = [1, 2, 3, 4, 5];
+const itemsPerPageOptions = [15, 25, 50, 100];
 const itemsPerPage = ref(itemsPerPageOptions[0]);
 
 const paginatedConsults = computed(() => {
