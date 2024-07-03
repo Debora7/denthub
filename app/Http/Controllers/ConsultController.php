@@ -56,4 +56,39 @@ class ConsultController extends Controller
         $consult->delete();
         return redirect()->route('dashboard');
     }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'doctor' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'city' => 'required|integer|exists:cities,id',
+            'county' => 'required|integer|exists:counties,id',
+            'service' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+        ]);
+
+        $user = auth()->user();
+
+        $consultData = [
+            'doctor' => $request->doctor,
+            'service' => $request->service,
+            'description' => $request->description,
+            'price' => $request->price,
+            'address' => $request->address,
+            'city_id' => $request->city,
+            'county_id' => $request->county,
+            'user_id' => $user->id,
+        ];
+
+        $consult = Consult::find($request->id);
+        if ($consult) {
+            $consult->update($consultData);
+        } else {
+            return redirect()->route('dashboard')->withErrors('Consult not found.');
+        }
+
+        return redirect()->route('dashboard');
+    }
 }
