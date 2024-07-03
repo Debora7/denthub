@@ -1,10 +1,24 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router } from "@inertiajs/vue3";
-import { defineProps } from "vue";
+import { defineProps, ref, computed } from "vue";
 
 const props = defineProps({
     consults: Array,
+});
+
+const searchQuery = ref("");
+
+const filteredConsults = computed(() => {
+    return props.consults.filter((consult) => {
+        const searchLower = searchQuery.value.toLowerCase();
+        return (
+            consult.doctor.toLowerCase().includes(searchLower) ||
+            consult.service.toLowerCase().includes(searchLower) ||
+            consult.city.name.toLowerCase().includes(searchLower) ||
+            consult.county.name.toLowerCase().includes(searchLower)
+        );
+    });
 });
 </script>
 
@@ -14,17 +28,36 @@ const props = defineProps({
     <AuthenticatedLayout>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div v-if="consults.length > 0">
+                <div class="mb-4">
+                    <div class="input-group">
+                        <span
+                            class="input-group-text"
+                            id="basic-addon1"
+                            style="background-color: white"
+                        >
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input
+                            v-model="searchQuery"
+                            type="text"
+                            placeholder="Caută"
+                            class="form-control"
+                            aria-label="Search"
+                            aria-describedby="basic-addon1"
+                        />
+                    </div>
+                </div>
+                <div v-if="filteredConsults.length > 0">
                     <div
                         class="card mb-2"
-                        v-for="consult in consults"
+                        v-for="consult in filteredConsults"
                         :key="consult.id"
                     >
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-8">
                                     <h3 class="card-title">
-                                        {{ consult.doctor }}
+                                        Dr. {{ consult.doctor }}
                                     </h3>
                                     <h6 class="card-subtitle mb-2 text-muted">
                                         {{ consult.service }}
@@ -48,9 +81,7 @@ const props = defineProps({
                                         style="font-size: 20px"
                                     >
                                         <strong>Preț:</strong>
-                                        {{
-                                            parseFloat(consult.price).toFixed(2)
-                                        }}
+                                        {{ consult.price }}
                                         Lei
                                     </p>
                                 </div>

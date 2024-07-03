@@ -24,7 +24,7 @@ const form = useForm({
     services: [
         {
             service: "",
-            price: 0,
+            price: 0.0,
             description: "",
         },
     ],
@@ -47,7 +47,7 @@ watch(
 const addService = () => {
     form.services.push({
         service: "",
-        price: 0,
+        price: 0.0,
         description: "",
     });
 };
@@ -123,7 +123,8 @@ const submit = () => {
                                         />
                                         <NumberInput
                                             :id="`price-${index}`"
-                                            type="text"
+                                            type="number"
+                                            step="0.10"
                                             class="mt-1 block w-full"
                                             v-model="service.price"
                                             required
