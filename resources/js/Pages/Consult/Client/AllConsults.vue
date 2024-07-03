@@ -1,12 +1,27 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router } from "@inertiajs/vue3";
+import { Head, useForm } from "@inertiajs/vue3";
 import { defineProps, ref, computed } from "vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import Modal from "@/Components/Modal.vue";
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
 
 const props = defineProps({
     consults: Array,
 });
 
+const modalAppointment = ref(false);
+const appointmentDetails = useForm({
+    consult_id: 0,
+    doctor: "",
+    service: "",
+    price: 0.0,
+    date: new Date(new Date().setHours(8, 0, 0, 0)),
+});
+const now = new Date();
 const searchQuery = ref("");
 const currentPage = ref(1);
 const itemsPerPageOptions = [15, 25, 50, 100];
@@ -81,6 +96,39 @@ const changeItemsPerPage = (event) => {
 
 const toggleSortOrder = () => {
     sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
+};
+
+const disabledDates = (date) => {
+    return date < now;
+};
+
+const disabledHours = (hour) => {
+    const currentHour = now.getHours();
+    const currentDate = now.getDate();
+    const selectedDate = new Date(appointmentDetails.date).getDate();
+    return selectedDate === currentDate && hour < currentHour;
+};
+
+const openModal = (consult) => {
+    appointmentDetails.consult_id = consult.id;
+    appointmentDetails.doctor = consult.doctor;
+    appointmentDetails.service = consult.service;
+    appointmentDetails.price = consult.price;
+
+    modalAppointment.value = true;
+};
+
+const closeModal = () => {
+    modalAppointment.value = false;
+};
+
+const submit = () => {
+    appointmentDetails.post(route("consult.client.store"), {
+        onFinish: () => {
+            appointmentDetails.reset();
+            modalAppointment.value = false;
+        },
+    });
 };
 </script>
 
@@ -194,17 +242,24 @@ const toggleSortOrder = () => {
                                     </p>
                                 </div>
                                 <div
-                                    class="col-md-4"
-                                    style="text-align: center"
+                                    class="col-md-4 d-flex flex-column justify-content-between"
+                                    style="text-align: left"
                                 >
                                     <p
                                         class="card-text"
                                         style="font-size: 20px"
                                     >
                                         <strong>Preț:</strong>
-                                        {{ consult.price }}
-                                        Lei
+                                        {{ consult.price }} Lei
                                     </p>
+
+                                    <div>
+                                        <PrimaryButton
+                                            @click="openModal(consult)"
+                                        >
+                                            Fă o programare
+                                        </PrimaryButton>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -307,6 +362,53 @@ const toggleSortOrder = () => {
                 </div>
             </div>
         </div>
+
+        <Modal
+            :show="modalAppointment"
+            @close="closeModal"
+            style="height: 500px"
+        >
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Dorești să faci o programare la Dr.
+                    {{ appointmentDetails.doctor }} pentru
+                    {{ appointmentDetails.service }}?
+                </h2>
+
+                <p class="mt-1 text-gray-600">
+                    Prețul va fi de {{ appointmentDetails.price }} Lei. Plata nu
+                    se face în avans.
+                </p>
+
+                <form>
+                    <div class="mb-4">
+                        <label for="date" class="block text-gray-700 mb-2"
+                            >Selectează o dată și o oră:</label
+                        >
+                        <VueDatePicker
+                            style="align-self: center"
+                            v-model="appointmentDetails.date"
+                            inline
+                            auto-apply
+                            time-picker-inline
+                            minutes-increment="30"
+                            :min-time="{ hours: 8, minutes: 0 }"
+                            :max-time="{ hours: 20, minutes: 0 }"
+                            :disabled-dates="disabledDates"
+                            :disabled-hours="disabledHours"
+                        />
+                    </div>
+
+                    <div class="flex items-center justify-end mt-4">
+                        <DangerButton @click="submit">Salvează</DangerButton>
+
+                        <SecondaryButton @click="closeModal" class="ms-3">
+                            Închide
+                        </SecondaryButton>
+                    </div>
+                </form>
+            </div>
+        </Modal>
     </AuthenticatedLayout>
 </template>
 

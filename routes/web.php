@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use Inertia\Inertia;
 use App\Models\Consult;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,7 @@ Route::middleware('auth')->group(function () {
 
         Route::prefix('client')->name('client.')->group(function () {
             Route::get('/index', [ConsultClientController::class, 'index'])->name('index');
+            Route::post('/store', [AppointmentController::class, 'store'])->name('store');
         });
     });
 });

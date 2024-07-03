@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router, useForm } from "@inertiajs/vue3";
+import { Head, useForm } from "@inertiajs/vue3";
 import { ref, defineProps, computed, watch } from "vue";
 import Modal from "@/Components/Modal.vue";
 import InputError from "@/Components/InputError.vue";
@@ -10,6 +10,7 @@ import TextInput from "@/Components/TextInput.vue";
 import NumberInput from "@/Components/NumberInput.vue";
 import TextareaInput from "@/Components/TextareaInput.vue";
 import DangerButton from "@/Components/DangerButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 const props = defineProps({
     consults: Array,
@@ -627,12 +628,12 @@ const deleteConsult = () => {
                                 Șterge
                             </DangerButton>
 
-                            <PrimaryButton
+                            <SecondaryButton
                                 @click="closeModalDelete"
                                 class="ms-3"
                             >
                                 Închide
-                            </PrimaryButton>
+                            </SecondaryButton>
                         </div>
                     </form>
                 </div>
