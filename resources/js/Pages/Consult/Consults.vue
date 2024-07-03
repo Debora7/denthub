@@ -1,8 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, useForm, router } from "@inertiajs/vue3";
-import { ref, defineProps, watch } from "vue";
-import Modal from "@/Components/Modal.vue";
+import { Head, router } from "@inertiajs/vue3";
+import { defineProps } from "vue";
 
 const props = defineProps({
     consults: Array,
