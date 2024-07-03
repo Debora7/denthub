@@ -41,7 +41,10 @@ Route::middleware('auth')->group(function () {
 
         Route::prefix('client')->name('client.')->group(function () {
             Route::get('/index', [ConsultClientController::class, 'index'])->name('index');
-            Route::post('/store', [AppointmentController::class, 'store'])->name('store');
+
+            Route::prefix('appointment')->name('appointment.')->group(function () {
+                Route::post('/store', [AppointmentController::class, 'store'])->name('appointment');
+            });
         });
     });
 });

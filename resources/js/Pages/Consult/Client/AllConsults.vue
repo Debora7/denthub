@@ -123,7 +123,7 @@ const closeModal = () => {
 };
 
 const submit = () => {
-    appointmentDetails.post(route("consult.client.store"), {
+    appointmentDetails.post(route("consult.client.appointment.store"), {
         onFinish: () => {
             appointmentDetails.reset();
             modalAppointment.value = false;
