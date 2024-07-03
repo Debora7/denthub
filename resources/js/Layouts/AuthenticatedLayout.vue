@@ -238,6 +238,57 @@ const userRole = props.auth.user.cui;
             <main>
                 <slot />
             </main>
+
+            <!-- Footer -->
+            <footer class="bg-white border-t border-gray-200 mt-8">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900">
+                                Contactează-ne
+                            </h3>
+                            <ul class="mt-2 text-gray-600 list-none pl-0">
+                                <li>
+                                    <a
+                                        href="https://mail.google.com/mail/?view=cm&fs=1&to=denthub@proton.me"
+                                        class="flex items-center text-gray-600 hover:text-gray-900"
+                                        style="text-decoration: none"
+                                    >
+                                        <i class="fas fa-envelope mr-2"></i>
+                                        denthub@proton.me
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900">
+                                Linkuri utile
+                            </h3>
+                            <ul class="mt-2 space-y-2 list-none pl-0">
+                                <li>
+                                    <a
+                                        href="#"
+                                        class="text-gray-600 hover:text-gray-900"
+                                        style="text-decoration: none"
+                                    >
+                                        Termenii și condiții
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        href="#"
+                                        class="text-gray-600 hover:text-gray-900"
+                                        style="text-decoration: none"
+                                    >
+                                        Politica de prelucrare a datelor cu
+                                        caracter personal
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
     </div>
 </template>
