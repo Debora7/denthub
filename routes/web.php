@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ConsultController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ConsultClientController;
+use App\Models\County;
 
 Route::get('/', function () {
     return Inertia::render('Auth/Login');
@@ -13,10 +14,12 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     $user = auth()->user();
+    $counties = County::with('cities')->get();
     return Inertia::render('Dashboard', [
         'consults' => Consult::with('city', 'county', 'user')
             ->where('user_id', $user->id)
-            ->get()
+            ->get(),
+        'counties' => $counties
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -33,7 +36,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/index', [ConsultController::class, 'index'])->name('index');
         Route::post('/store', [ConsultController::class, 'store'])->name('store');
         Route::delete('/{consult}', [ConsultController::class, 'destroy'])->name('destroy');
-        Route::put('/{consult}', [ConsultController::class, 'update'])->name('update');
+        Route::put('/update', [ConsultController::class, 'update'])->name('update');
 
         Route::prefix('client')->name('client.')->group(function () {
             Route::get('/index', [ConsultClientController::class, 'index'])->name('index');

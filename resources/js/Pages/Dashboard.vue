@@ -1,10 +1,18 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router } from "@inertiajs/vue3";
-import { ref, defineProps, computed } from "vue";
+import { Head, router, useForm } from "@inertiajs/vue3";
+import { ref, defineProps, computed, watch } from "vue";
+import Modal from "@/Components/Modal.vue";
+import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import TextInput from "@/Components/TextInput.vue";
+import NumberInput from "@/Components/NumberInput.vue";
+import TextareaInput from "@/Components/TextareaInput.vue";
 
 const props = defineProps({
     consults: Array,
+    counties: Array,
 });
 
 const deleteConsult = (id) => {
@@ -17,6 +25,7 @@ const deleteConsult = (id) => {
     }
 };
 
+const modalEditConsult = ref(false);
 const currentPage = ref(1);
 const itemsPerPageOptions = [15, 25, 50, 100];
 const itemsPerPage = ref(itemsPerPageOptions[0]);
@@ -39,7 +48,58 @@ const changePage = (page) => {
 
 const changeItemsPerPage = (event) => {
     itemsPerPage.value = parseInt(event.target.value);
-    currentPage.value = 1; // Reset to first page on items per page change
+    currentPage.value = 1;
+};
+
+const editConsult = (consult) => {
+    form.doctor = consult.doctor;
+    form.address = consult.address;
+    form.city = consult.city_id;
+    form.county = consult.county_id;
+    form.service = consult.service;
+    form.price = Number(parseFloat(consult.price).toFixed(2));
+    form.description = consult.description;
+    form.id = consult.id;
+
+    modalEditConsult.value = true;
+};
+
+const closeModal = () => {
+    modalEditConsult.value = false;
+};
+
+const form = useForm({
+    id: 0,
+    doctor: "",
+    address: "",
+    city: "",
+    county: "",
+    service: "",
+    price: 0.0,
+    description: "",
+});
+
+const cities = ref([]);
+
+const updateCities = (selectedCountyId) => {
+    const county = props.counties.find((c) => c.id === selectedCountyId);
+    cities.value = county ? county.cities : [];
+};
+
+watch(
+    () => form.county,
+    (newCounty) => {
+        updateCities(newCounty);
+    }
+);
+
+const submit = () => {
+    form.put(route("consult.update"), {
+        onFinish: () => {
+            form.reset();
+            modalEditConsult.value = false;
+        },
+    });
 };
 </script>
 
@@ -141,7 +201,7 @@ const changeItemsPerPage = (event) => {
                                         >
                                             <button
                                                 type="button"
-                                                @click="editConsult(consult.id)"
+                                                @click="editConsult(consult)"
                                                 class="inline-flex items-center justify-center text-center p-2 bg-yellow-500 border border-transparent rounded-full text-white hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:shadow-outline-red transition ease-in-out duration-150 ml-2"
                                             >
                                                 <i class="fas fa-pencil"></i>
@@ -264,6 +324,174 @@ const changeItemsPerPage = (event) => {
                 </div>
             </div>
         </div>
+
+        <Modal :show="modalEditConsult" @close="closeModal" :maxWidth="lg">
+            <div class="p-6">
+                <form @submit.prevent="submit">
+                    <!-- Medic -->
+                    <div>
+                        <InputLabel for="doctor" value="Medic" />
+
+                        <TextInput
+                            id="doctor"
+                            type="text"
+                            class="mt-1 block w-full"
+                            v-model="form.doctor"
+                            required
+                            autofocus
+                        />
+
+                        <InputError
+                            class="mt-2"
+                            :message="form.errors.doctor"
+                        />
+                    </div>
+
+                    <!-- Service and Price -->
+                    <div class="mt-4 flex flex-col space-y-4">
+                        <div class="flex space-x-4">
+                            <div class="flex-1">
+                                <InputLabel
+                                    for="service"
+                                    value="Serviciul oferit"
+                                />
+                                <TextInput
+                                    id="service"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    v-model="form.service"
+                                    required
+                                />
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors['service']"
+                                />
+                            </div>
+
+                            <div class="flex-1">
+                                <InputLabel for="price" value="Preț" />
+                                <NumberInput
+                                    id="price"
+                                    type="number"
+                                    step="0.10"
+                                    class="mt-1 block w-full"
+                                    v-model="form.price"
+                                    required
+                                />
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors['price']"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Descrierea serviciului -->
+                        <div>
+                            <InputLabel
+                                for="description"
+                                value="Descrierea serviciului"
+                            />
+                            <TextareaInput
+                                id="description"
+                                type="textarea"
+                                class="mt-1 block w-full"
+                                v-model="form.description"
+                                required
+                            />
+                            <InputError
+                                class="mt-2"
+                                :message="form.errors['description']"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Adresa completa-->
+                    <div class="mt-4">
+                        <InputLabel for="address" value="Adresa completă" />
+
+                        <TextInput
+                            id="address"
+                            type="text"
+                            class="mt-1 block w-full"
+                            v-model="form.address"
+                            required
+                        />
+
+                        <InputError
+                            class="mt-2"
+                            :message="form.errors.address"
+                        />
+                    </div>
+
+                    <!-- Oraș și Județ -->
+                    <div class="mt-4 flex space-x-4">
+                        <div class="flex-1">
+                            <InputLabel for="county" value="Județ" />
+                            <select
+                                id="county"
+                                class="mt-1 block w-full"
+                                v-model="form.county"
+                                required
+                                style="
+                                    border-radius: 5px;
+                                    border-color: lightgray;
+                                "
+                            >
+                                <option value="">Selectează județul</option>
+                                <option
+                                    v-for="county in props.counties"
+                                    :key="county.id"
+                                    :value="county.id"
+                                >
+                                    {{ county.name }}
+                                </option>
+                            </select>
+                            <InputError
+                                class="mt-2"
+                                :message="form.errors.county"
+                            />
+                        </div>
+
+                        <div class="flex-1">
+                            <InputLabel for="city" value="Oraș" />
+                            <select
+                                id="city"
+                                class="mt-1 block w-full"
+                                v-model="form.city"
+                                required
+                                style="
+                                    border-radius: 5px;
+                                    border-color: lightgray;
+                                "
+                            >
+                                <option value="">Selectează orașul</option>
+                                <option
+                                    v-for="city in cities"
+                                    :key="city.id"
+                                    :value="city.id"
+                                >
+                                    {{ city.name }}
+                                </option>
+                            </select>
+                            <InputError
+                                class="mt-2"
+                                :message="form.errors.city"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-end mt-4">
+                        <PrimaryButton
+                            class="ms-4"
+                            :class="{ 'opacity-25': form.processing }"
+                            :disabled="form.processing"
+                        >
+                            Salvează
+                        </PrimaryButton>
+                    </div>
+                </form>
+            </div>
+        </Modal>
     </AuthenticatedLayout>
 </template>
 
