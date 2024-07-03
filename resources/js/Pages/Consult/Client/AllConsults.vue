@@ -380,7 +380,7 @@ const submit = () => {
                     se face în avans.
                 </p>
 
-                <form>
+                <form @submit.prevent="submit">
                     <div class="mb-4">
                         <label for="date" class="block text-gray-700 mb-2"
                             >Selectează o dată și o oră:</label
