@@ -180,9 +180,9 @@ const toggleSortOrder = () => {
                                     <h3 class="card-title">
                                         Dr. {{ consult.doctor }}
                                     </h3>
-                                    <h6 class="card-subtitle mb-2 text-muted">
+                                    <h4 class="card-subtitle mb-2 text-muted">
                                         {{ consult.service }}
-                                    </h6>
+                                    </h4>
                                     <p class="card-text">
                                         {{ consult.description }}
                                     </p>
