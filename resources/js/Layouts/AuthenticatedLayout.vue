@@ -23,7 +23,10 @@ const userRole = props.auth.user.cui;
                     <div class="flex justify-between h-16">
                         <div class="flex">
                             <!-- Logo -->
-                            <div class="shrink-0 flex items-center" v-if="userRole !== null">
+                            <div
+                                class="shrink-0 flex items-center"
+                                v-if="userRole !== null"
+                            >
                                 <Link
                                     :href="route('dashboard')"
                                     style="text-decoration: none"
@@ -34,7 +37,10 @@ const userRole = props.auth.user.cui;
                                 </Link>
                             </div>
 
-                            <div class="shrink-0 flex items-center" v-else>
+                            <div
+                                class="shrink-0 flex items-center"
+                                v-if="userRole === null"
+                            >
                                 <Link
                                     :href="route('consult.client.index')"
                                     style="text-decoration: none"
@@ -66,11 +72,13 @@ const userRole = props.auth.user.cui;
 
                             <div
                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
-                                v-else"
+                                v-if="userRole === null"
                             >
                                 <NavLink
                                     :href="route('consult.client.index')"
-                                    :active="route().current('consult.client.index')"
+                                    :active="
+                                        route().current('consult.client.index')
+                                    "
                                 >
                                     Servicii
                                 </NavLink>
@@ -183,7 +191,7 @@ const userRole = props.auth.user.cui;
                         </ResponsiveNavLink>
                     </div>
 
-                    <div class="pt-2 pb-3 space-y-1" v-else>
+                    <div class="pt-2 pb-3 space-y-1" v-if="userRole === null">
                         <ResponsiveNavLink
                             :href="route('consult.client.index')"
                             :active="route().current('consult.client.index')"

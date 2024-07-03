@@ -47,12 +47,6 @@ const deleteConsult = (id) => {
                                             scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                         >
-                                            Descrierea serviciului
-                                        </th>
-                                        <th
-                                            scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                        >
                                             Preț
                                         </th>
                                         <th
@@ -97,11 +91,6 @@ const deleteConsult = (id) => {
                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                                         >
                                             {{ consult.service }}
-                                        </td>
-                                        <td
-                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                                        >
-                                            {{ consult.description }}
                                         </td>
                                         <td
                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"

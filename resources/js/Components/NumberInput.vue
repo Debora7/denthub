@@ -1,10 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 
-const model = defineModel({
-    type: String,
-    required: true,
-});
+const model = ref(0); // Initialize model with a default number value
 
 const input = ref(null);
 
@@ -18,8 +15,10 @@ defineExpose({ focus: () => input.value.focus() });
 
 const handleInput = (event) => {
     const value = event.target.value;
-    if (!/^\d*$/.test(value)) {
-        model.value = value.replace(/\D/g, "");
+    if (/^\d*\.?\d*$/.test(value)) {
+        model.value = parseFloat(value);
+    } else {
+        model.value = parseFloat(value.replace(/[^0-9.]/g, ""));
     }
 };
 </script>
@@ -30,5 +29,6 @@ const handleInput = (event) => {
         v-model="model"
         @input="handleInput"
         ref="input"
+        type="text"
     />
 </template>

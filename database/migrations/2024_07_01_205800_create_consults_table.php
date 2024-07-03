@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('doctor');
             $table->string('service');
-            $table->string('description');
-            $table->bigInteger('price');
+            $table->text('description');
+            $table->decimal('price', 8, 2);
             $table->string('address');
             $table->bigInteger('city_id');
             $table->bigInteger('county_id');
