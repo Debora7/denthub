@@ -1,10 +1,11 @@
 <?php
 
 use Inertia\Inertia;
+use App\Models\Consult;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ConsultController;
 use App\Http\Controllers\ProfileController;
-use App\Models\Consult;
+use App\Http\Controllers\ConsultClientController;
 
 Route::get('/', function () {
     return Inertia::render('Auth/Login');
@@ -33,6 +34,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [ConsultController::class, 'store'])->name('store');
         Route::delete('/{consult}', [ConsultController::class, 'destroy'])->name('destroy');
         Route::put('/{consult}', [ConsultController::class, 'update'])->name('update');
+
+        Route::prefix('client')->name('client.')->group(function () {
+            Route::get('/index', [ConsultClientController::class, 'index'])->name('index');
+        });
     });
 });
 
