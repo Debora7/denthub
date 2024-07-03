@@ -15,17 +15,21 @@ const props = defineProps({
     counties: Array,
 });
 
-const deleteConsult = (id) => {
-    if (confirm("Ești sigur că vrei să ștergi serviciul?")) {
-        router.delete(route("consult.destroy", id), {
-            onSuccess: () => {
-                alert("Serviciul a fost șters cu succes!");
-            },
-        });
-    }
+const deleteConsultModal = (consult) => {
+    form.doctor = consult.doctor;
+    form.address = consult.address;
+    form.city = consult.city.name;
+    form.county = consult.county.name;
+    form.service = consult.service;
+    form.price = Number(parseFloat(consult.price).toFixed(2));
+    form.description = consult.description;
+    form.id = consult.id;
+
+    modalDeleteConsult.value = true;
 };
 
 const modalEditConsult = ref(false);
+const modalDeleteConsult = ref(false);
 const currentPage = ref(1);
 const itemsPerPageOptions = [15, 25, 50, 100];
 const itemsPerPage = ref(itemsPerPageOptions[0]);
@@ -64,8 +68,12 @@ const editConsult = (consult) => {
     modalEditConsult.value = true;
 };
 
-const closeModal = () => {
+const closeModalEdit = () => {
     modalEditConsult.value = false;
+};
+
+const closeModalDelete = () => {
+    modalDeleteConsult.value = false;
 };
 
 const form = useForm({
@@ -98,6 +106,15 @@ const submit = () => {
         onFinish: () => {
             form.reset();
             modalEditConsult.value = false;
+        },
+    });
+};
+
+const deleteConsult = () => {
+    form.delete(route("consult.destroy"), {
+        onFinish: () => {
+            form.reset();
+            modalDeleteConsult.value = false;
         },
     });
 };
@@ -210,7 +227,7 @@ const submit = () => {
                                             <button
                                                 type="button"
                                                 @click="
-                                                    deleteConsult(consult.id)
+                                                    deleteConsultModal(consult)
                                                 "
                                                 class="inline-flex items-center justify-center text-center p-2 bg-red-500 border border-transparent rounded-full text-white hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:shadow-outline-red transition ease-in-out duration-150 ml-2"
                                             >
@@ -325,7 +342,7 @@ const submit = () => {
             </div>
         </div>
 
-        <Modal :show="modalEditConsult" @close="closeModal" :maxWidth="lg">
+        <Modal :show="modalEditConsult" @close="closeModalEdit" :maxWidth="lg">
             <div class="p-6">
                 <form @submit.prevent="submit">
                     <!-- Medic -->
@@ -491,6 +508,127 @@ const submit = () => {
                     </div>
                 </form>
             </div>
+        </Modal>
+
+        <Modal :show="modalDeleteConsult" @close="closeModalDelete">
+            <header>
+                <div class="p-6">
+                    <h2 class="text-lg font-medium text-gray-900">
+                        Ești sigur că vrei să ștergi următorul serviciu?
+                    </h2>
+
+                    <form @submit.prevent="deleteConsult">
+                        <!-- Medic -->
+                        <div>
+                            <InputLabel for="doctor" value="Medic" />
+
+                            <TextInput
+                                id="doctor"
+                                type="text"
+                                class="mt-1 block w-full"
+                                v-model="form.doctor"
+                                readonly
+                                autofocus
+                            />
+                        </div>
+
+                        <!-- Service and Price -->
+                        <div class="mt-4 flex flex-col space-y-4">
+                            <div class="flex space-x-4">
+                                <div class="flex-1">
+                                    <InputLabel
+                                        for="service"
+                                        value="Serviciul oferit"
+                                    />
+                                    <TextInput
+                                        id="service"
+                                        type="text"
+                                        class="mt-1 block w-full"
+                                        v-model="form.service"
+                                        readonly
+                                    />
+                                </div>
+
+                                <div class="flex-1">
+                                    <InputLabel for="price" value="Preț" />
+                                    <NumberInput
+                                        id="price"
+                                        type="number"
+                                        step="0.10"
+                                        class="mt-1 block w-full"
+                                        v-model="form.price"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+
+                            <!-- Descrierea serviciului -->
+                            <div>
+                                <InputLabel
+                                    for="description"
+                                    value="Descrierea serviciului"
+                                />
+                                <TextareaInput
+                                    id="description"
+                                    type="textarea"
+                                    class="mt-1 block w-full"
+                                    v-model="form.description"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Adresa completa-->
+                        <div class="mt-4">
+                            <InputLabel for="address" value="Adresa completă" />
+
+                            <TextInput
+                                id="address"
+                                type="text"
+                                class="mt-1 block w-full"
+                                v-model="form.address"
+                                readonly
+                            />
+                        </div>
+
+                        <!-- Oraș și Județ -->
+                        <div class="mt-4 flex space-x-4">
+                            <div class="flex-1">
+                                <InputLabel for="county" value="Județ" />
+
+                                <TextInput
+                                    id="address"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    v-model="form.county"
+                                    readonly
+                                />
+                            </div>
+
+                            <div class="flex-1">
+                                <InputLabel for="city" value="Oraș" />
+                                <TextInput
+                                    id="address"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    v-model="form.city"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-end mt-4">
+                            <PrimaryButton
+                                class="ms-4"
+                                :class="{ 'opacity-25': form.processing }"
+                                :disabled="form.processing"
+                            >
+                                Șterge
+                            </PrimaryButton>
+                        </div>
+                    </form>
+                </div>
+            </header>
         </Modal>
     </AuthenticatedLayout>
 </template>

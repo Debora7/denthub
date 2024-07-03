@@ -51,8 +51,9 @@ class ConsultController extends Controller
         return redirect()->route('dashboard');
     }
 
-    public function destroy(Consult $consult)
+    public function destroy(Request $request)
     {
+        $consult = Consult::find($request->id);
         $consult->delete();
         return redirect()->route('dashboard');
     }
