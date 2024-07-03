@@ -63,7 +63,7 @@ class RegisteredUserController extends Controller
         if ($user->cui !== null) {
             return redirect()->route('dashboard');
         } else {
-            return redirect()->route('welcome');
+            return redirect()->route('consult.client.index');
         }
     }
 }
