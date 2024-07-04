@@ -400,7 +400,7 @@ const submit = () => {
                     </div>
 
                     <div class="flex items-center justify-end mt-4">
-                        <DangerButton @click="submit">Salvează</DangerButton>
+                        <DangerButton type="submit">Salvează</DangerButton>
 
                         <SecondaryButton @click="closeModal" class="ms-3">
                             Închide

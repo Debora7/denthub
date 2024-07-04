@@ -17,7 +17,7 @@ class AppointmentController extends Controller
         // Check for conflicts
         foreach ($existingAppointments as $appointment) {
             if (Carbon::parse($appointment->appointment_date)->format('Y-m-d H:i') == Carbon::parse($request->date)->addHours(3)->format('Y-m-d H:i')) {
-                return response()->json(['message' => 'Există deja o programare pentru această zi. Alege altă oră!'], 400);
+                return redirect()->back()->with('error', 'Appointment conflict.');
             }
         }
 
@@ -28,6 +28,6 @@ class AppointmentController extends Controller
         $appointment->appointment_date = Carbon::parse($request->date)->addHours(3)->format('Y-m-d H:i');
         $appointment->save();
 
-        return response()->json(['message' => 'Programarea a fost realizată cu succes!'], 200);
+        return redirect()->back()->with('success', 'Appointment created successfully.');
     }
 }
