@@ -218,7 +218,7 @@ const submit = () => {
                 </div>
                 <div v-if="paginatedConsults.length > 0">
                     <div
-                        class="card mb-2"
+                        class="card mb-4 border-gray-200 shadow-lg"
                         v-for="consult in paginatedConsults"
                         :key="consult.id"
                     >
@@ -431,5 +431,22 @@ const submit = () => {
 
 .custom-pagination .page-item:hover .page-link {
     text-decoration: none;
+}
+
+.card {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+}
+
+.card-title {
+    font-size: 1.25rem;
+}
+
+.card-subtitle {
+    font-size: 1rem;
+}
+
+.card-text {
+    font-size: 1rem;
 }
 </style>
