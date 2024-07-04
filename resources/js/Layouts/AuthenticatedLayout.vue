@@ -82,6 +82,20 @@ const userRole = props.auth.user.cui;
                                 >
                                     Servicii
                                 </NavLink>
+                                <NavLink
+                                    :href="
+                                        route(
+                                            'consult.client.appointment.index'
+                                        )
+                                    "
+                                    :active="
+                                        route().current(
+                                            'consult.client.appointment.index'
+                                        )
+                                    "
+                                >
+                                    Programări
+                                </NavLink>
                             </div>
                         </div>
 

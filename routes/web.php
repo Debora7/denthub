@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use Inertia\Inertia;
 use App\Models\Consult;
 use Illuminate\Support\Facades\Route;
@@ -35,11 +36,16 @@ Route::middleware('auth')->group(function () {
     Route::prefix('consult')->name('consult.')->group(function () {
         Route::get('/index', [ConsultController::class, 'index'])->name('index');
         Route::post('/store', [ConsultController::class, 'store'])->name('store');
-        Route::delete('/{consult}', [ConsultController::class, 'destroy'])->name('destroy');
+        Route::delete('/delete', [ConsultController::class, 'destroy'])->name('destroy');
         Route::put('/update', [ConsultController::class, 'update'])->name('update');
 
         Route::prefix('client')->name('client.')->group(function () {
             Route::get('/index', [ConsultClientController::class, 'index'])->name('index');
+
+            Route::prefix('appointment')->name('appointment.')->group(function () {
+                Route::post('/store', [AppointmentController::class, 'store'])->name('store');
+                Route::get('/index', [AppointmentController::class, 'index'])->name('index');
+            });
         });
     });
 });
