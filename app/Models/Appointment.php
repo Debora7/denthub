@@ -14,6 +14,7 @@ class Appointment extends Model
         'user_id',
         'consult_id',
         'appointment_date',
+        'status'
     ];
 
     public function user()

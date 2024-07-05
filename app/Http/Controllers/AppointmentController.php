@@ -21,11 +21,7 @@ class AppointmentController extends Controller
                 }
             ])
             ->orderBy('appointment_date', 'desc')
-            ->get()
-            ->map(function ($appointment) {
-                $appointment->status = $appointment->trashed() ? 'Anulată' : 'Confirmată';
-                return $appointment;
-            });
+            ->get();
 
         return Inertia::render('Consult/Client/AllAppointments', ['appointments' => $appointments]);
     }

@@ -4,12 +4,12 @@ import { Head } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
 import { defineProps, defineEmits } from "vue";
 import DangerButton from "@/Components/DangerButton.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const props = defineProps(["appointments"]);
-console.log(props.appointments);
 const emit = defineEmits(["consult-clicked"]);
 
 const getMapLink = (consult) => {
@@ -195,6 +195,9 @@ const changeItemsPerPage = (event) => {
                                                 appointment.status ===
                                                 'Confirmată'
                                                     ? 'badge-success'
+                                                    : appointment.status ===
+                                                      'Onorată'
+                                                    ? 'badge-primary'
                                                     : 'badge-danger',
                                             ]"
                                         >
@@ -205,7 +208,11 @@ const changeItemsPerPage = (event) => {
                                 <div
                                     class="col-md-6 d-flex flex-column justify-content-end align-items-end"
                                 >
-                                    <SecondaryButton>
+                                    <PrimaryButton
+                                        v-if="appointment.status === 'Onorată'"
+                                        >Recenzie</PrimaryButton
+                                    >
+                                    <SecondaryButton class="ms-3 mt-2">
                                         Editează
                                     </SecondaryButton>
                                     <DangerButton class="ms-3 mt-2">
@@ -346,7 +353,7 @@ const changeItemsPerPage = (event) => {
     border-radius: 0.375rem;
 }
 
-.badge-success {
+.badge-primary {
     color: #000;
     background-color: #28a745;
     font-weight: normal;
@@ -355,6 +362,12 @@ const changeItemsPerPage = (event) => {
 .badge-danger {
     color: #000;
     background-color: #dc3545;
+    font-weight: normal;
+}
+
+.badge-success {
+    color: #000;
+    background-color: #007bff;
     font-weight: normal;
 }
 
