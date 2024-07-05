@@ -110,6 +110,7 @@ const changeItemsPerPage = (event) => {
                             placeholder="Selectează o dată"
                             class="form-control me-2"
                             :disabled-dates="disabledDates"
+                            :enable-time-picker="false"
                             :style="{
                                 backgroundColor: 'transparent',
                                 border: 'none',
