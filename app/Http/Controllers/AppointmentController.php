@@ -44,6 +44,6 @@ class AppointmentController extends Controller
         $appointment->appointment_date = Carbon::parse($request->date)->addHours(3)->format('Y-m-d H:i');
         $appointment->save();
 
-        return redirect()->back()->with('success', 'Programare salvată cu succes.');
+        return redirect()->route('consult.client.appointment.index');
     }
 }

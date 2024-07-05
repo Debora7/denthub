@@ -311,13 +311,15 @@ const changeItemsPerPage = (event) => {
 }
 
 .badge-success {
-    color: #fff;
+    color: #000;
     background-color: #28a745;
+    font-weight: normal;
 }
 
 .badge-danger {
-    color: #fff;
+    color: #000;
     background-color: #dc3545;
+    font-weight: normal;
 }
 
 button {
