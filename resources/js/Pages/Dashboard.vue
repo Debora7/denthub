@@ -15,6 +15,7 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 const props = defineProps({
     consults: Array,
     counties: Array,
+    doctors: Array,
 });
 
 const deleteConsultModal = (consult) => {
@@ -26,6 +27,7 @@ const deleteConsultModal = (consult) => {
     form.price = Number(parseFloat(consult.price).toFixed(2));
     form.description = consult.description;
     form.id = consult.id;
+    form.time = consult.consult_time.split(":")[1];
 
     modalDeleteConsult.value = true;
 };
@@ -58,13 +60,14 @@ const changeItemsPerPage = (event) => {
 };
 
 const editConsult = (consult) => {
-    form.doctor = consult.doctor;
+    form.doctor = consult.doctor_id;
     form.address = consult.address;
     form.city = consult.city_id;
     form.county = consult.county_id;
     form.service = consult.service;
     form.price = Number(parseFloat(consult.price).toFixed(2));
     form.description = consult.description;
+    form.time = consult.consult_time.split(":")[1];
     form.id = consult.id;
 
     modalEditConsult.value = true;
@@ -87,6 +90,7 @@ const form = useForm({
     service: "",
     price: 0.0,
     description: "",
+    time: "",
 });
 
 const cities = ref([]);
@@ -104,7 +108,11 @@ watch(
 );
 
 const submit = () => {
-    form.put(route("consult.update"), {
+    form.put(route("consult.update", { id: form.id }), {
+        preserveScroll: true,
+        data: {
+            ...form,
+        },
         onFinish: () => {
             form.reset();
             modalEditConsult.value = false;
@@ -350,23 +358,29 @@ const deleteConsult = () => {
                     <!-- Medic -->
                     <div>
                         <InputLabel for="doctor" value="Medic" />
-
-                        <TextInput
+                        <select
                             id="doctor"
-                            type="text"
                             class="mt-1 block w-full"
                             v-model="form.doctor"
                             required
-                            autofocus
-                        />
-
+                            style="border-radius: 5px; border-color: lightgray"
+                        >
+                            <option value="">Selectează medicul</option>
+                            <option
+                                v-for="doctor in props.doctors"
+                                :key="doctor.id"
+                                :value="doctor.id"
+                            >
+                                {{ doctor.name }}
+                            </option>
+                        </select>
                         <InputError
                             class="mt-2"
                             :message="form.errors.doctor"
                         />
                     </div>
 
-                    <!-- Service and Price -->
+                    <!-- Service, Price, and Time -->
                     <div class="mt-4 flex flex-col space-y-4">
                         <div class="flex space-x-4">
                             <div class="flex-1">
@@ -383,7 +397,7 @@ const deleteConsult = () => {
                                 />
                                 <InputError
                                     class="mt-2"
-                                    :message="form.errors['service']"
+                                    :message="form.errors.service"
                                 />
                             </div>
 
@@ -399,7 +413,35 @@ const deleteConsult = () => {
                                 />
                                 <InputError
                                     class="mt-2"
-                                    :message="form.errors['price']"
+                                    :message="form.errors.price"
+                                />
+                            </div>
+
+                            <!-- Time -->
+                            <div class="flex-1">
+                                <InputLabel for="time" value="Timp (minute)" />
+                                <select
+                                    id="time"
+                                    class="mt-1 block w-full"
+                                    v-model="form.time"
+                                    required
+                                    style="
+                                        border-radius: 5px;
+                                        border-color: lightgray;
+                                    "
+                                >
+                                    <option value="">Selectează timpul</option>
+                                    <option
+                                        v-for="minute in 60"
+                                        :key="minute"
+                                        :value="minute"
+                                    >
+                                        {{ minute }}
+                                    </option>
+                                </select>
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.time"
                                 />
                             </div>
                         </div>
@@ -419,7 +461,7 @@ const deleteConsult = () => {
                             />
                             <InputError
                                 class="mt-2"
-                                :message="form.errors['description']"
+                                :message="form.errors.description"
                             />
                         </div>
                     </div>
@@ -427,7 +469,6 @@ const deleteConsult = () => {
                     <!-- Adresa completa-->
                     <div class="mt-4">
                         <InputLabel for="address" value="Adresa completă" />
-
                         <TextInput
                             id="address"
                             type="text"
@@ -435,7 +476,6 @@ const deleteConsult = () => {
                             v-model="form.address"
                             required
                         />
-
                         <InputError
                             class="mt-2"
                             :message="form.errors.address"
@@ -523,7 +563,6 @@ const deleteConsult = () => {
                         <!-- Medic -->
                         <div>
                             <InputLabel for="doctor" value="Medic" />
-
                             <TextInput
                                 id="doctor"
                                 type="text"
@@ -534,7 +573,7 @@ const deleteConsult = () => {
                             />
                         </div>
 
-                        <!-- Service and Price -->
+                        <!-- Service, Price, and Time -->
                         <div class="mt-4 flex flex-col space-y-4">
                             <div class="flex space-x-4">
                                 <div class="flex-1">
@@ -562,6 +601,21 @@ const deleteConsult = () => {
                                         readonly
                                     />
                                 </div>
+
+                                <!-- Time -->
+                                <div class="flex-1">
+                                    <InputLabel
+                                        for="time"
+                                        value="Timp (minute)"
+                                    />
+                                    <TextInput
+                                        id="time"
+                                        type="text"
+                                        class="mt-1 block w-full"
+                                        v-model="form.time"
+                                        readonly
+                                    />
+                                </div>
                             </div>
 
                             <!-- Descrierea serviciului -->
@@ -583,7 +637,6 @@ const deleteConsult = () => {
                         <!-- Adresa completa-->
                         <div class="mt-4">
                             <InputLabel for="address" value="Adresa completă" />
-
                             <TextInput
                                 id="address"
                                 type="text"
@@ -597,7 +650,6 @@ const deleteConsult = () => {
                         <div class="mt-4 flex space-x-4">
                             <div class="flex-1">
                                 <InputLabel for="county" value="Județ" />
-
                                 <TextInput
                                     id="address"
                                     type="text"

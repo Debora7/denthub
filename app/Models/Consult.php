@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Doctor;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Consult extends Model
 {
@@ -18,6 +19,8 @@ class Consult extends Model
         'city_id',
         'county_id',
         'user_id',
+        'doctor_id',
+        'consult_time',
     ];
 
     public function city()
@@ -38,5 +41,10 @@ class Consult extends Model
     public function appointments()
     {
         return $this->hasMany(Appointment::class);
+    }
+
+    public function doctor()
+    {
+        return $this->belongsTo(Doctor::class);
     }
 }

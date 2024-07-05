@@ -14,6 +14,7 @@ const props = defineProps({
         type: String,
     },
     counties: Array,
+    doctors: Array,
 });
 
 const form = useForm({
@@ -26,6 +27,7 @@ const form = useForm({
             service: "",
             price: 0.0,
             description: "",
+            time: "",
         },
     ],
 });
@@ -49,6 +51,7 @@ const addService = () => {
         service: "",
         price: 0.0,
         description: "",
+        time: "",
     });
 };
 
@@ -58,7 +61,6 @@ const submit = () => {
     });
 };
 </script>
-
 <template>
     <Head title="Serviciu nou" />
 
@@ -71,16 +73,25 @@ const submit = () => {
                             <!-- Medic -->
                             <div>
                                 <InputLabel for="doctor" value="Medic" />
-
-                                <TextInput
+                                <select
                                     id="doctor"
-                                    type="text"
                                     class="mt-1 block w-full"
                                     v-model="form.doctor"
                                     required
-                                    autofocus
-                                />
-
+                                    style="
+                                        border-radius: 5px;
+                                        border-color: lightgray;
+                                    "
+                                >
+                                    <option value="">Selectează medicul</option>
+                                    <option
+                                        v-for="doctor in props.doctors"
+                                        :key="doctor.id"
+                                        :value="doctor.id"
+                                    >
+                                        {{ doctor.name }}
+                                    </option>
+                                </select>
                                 <InputError
                                     class="mt-2"
                                     :message="form.errors.doctor"
@@ -134,6 +145,39 @@ const submit = () => {
                                             :message="
                                                 form.errors[
                                                     `services.${index}.price`
+                                                ]
+                                            "
+                                        />
+                                    </div>
+
+                                    <div class="flex-1">
+                                        <InputLabel
+                                            :for="`time-${index}`"
+                                            value="Timp (minute)"
+                                        />
+                                        <select
+                                            :id="`time-${index}`"
+                                            class="mt-1 block w-full"
+                                            v-model="service.time"
+                                            required
+                                            style="
+                                                border-radius: 5px;
+                                                border-color: lightgray;
+                                            "
+                                        >
+                                            <option
+                                                v-for="minute in 60"
+                                                :key="minute"
+                                                :value="minute"
+                                            >
+                                                {{ minute }}
+                                            </option>
+                                        </select>
+                                        <InputError
+                                            class="mt-2"
+                                            :message="
+                                                form.errors[
+                                                    `services.${index}.time`
                                                 ]
                                             "
                                         />
