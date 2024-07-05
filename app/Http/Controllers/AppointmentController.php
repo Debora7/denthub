@@ -15,7 +15,11 @@ class AppointmentController extends Controller
         $user = Auth::user();
         $appointments = Appointment::withTrashed()
             ->where('user_id', $user->id)
-            ->with('consult')
+            ->with([
+                'consult' => function ($query) {
+                    $query->with(['city', 'county']);
+                }
+            ])
             ->orderBy('appointment_date', 'desc')
             ->get()
             ->map(function ($appointment) {
