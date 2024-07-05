@@ -2,12 +2,28 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
+import { defineProps, defineEmits } from "vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const props = defineProps(["appointments"]);
+console.log(props.appointments);
+const emit = defineEmits(["consult-clicked"]);
+
+const getMapLink = (consult) => {
+    const address = consult.address;
+    const city = consult.city.name;
+    const county = consult.county.name;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        address + ", " + city + ", " + county
+    )}`;
+};
+
+const handleClick = (consult) => {
+    emit("consult-clicked", consult);
+};
 
 const formatDate = (dateString) => {
     const options = {
@@ -151,6 +167,26 @@ const changeItemsPerPage = (event) => {
                                     <p class="card-text text-gray-600 mt-2">
                                         <strong>Preț:</strong>
                                         {{ appointment.consult.price }} Lei
+                                    </p>
+                                    <p class="card-text text-gray-600 mt-2">
+                                        <strong>Locație: </strong>
+                                        <a
+                                            class="text-muted"
+                                            style="text-decoration: none"
+                                            :href="
+                                                getMapLink(appointment.consult)
+                                            "
+                                            target="_blank"
+                                            @click="
+                                                handleClick(appointment.consult)
+                                            "
+                                        >
+                                            {{
+                                                appointment.consult.county.name
+                                            }},
+                                            {{ appointment.consult.city.name }},
+                                            {{ appointment.consult.address }}
+                                        </a>
                                     </p>
                                     <p class="card-text mt-2">
                                         <span
@@ -311,13 +347,15 @@ const changeItemsPerPage = (event) => {
 }
 
 .badge-success {
-    color: #fff;
+    color: #000;
     background-color: #28a745;
+    font-weight: normal;
 }
 
 .badge-danger {
-    color: #fff;
+    color: #000;
     background-color: #dc3545;
+    font-weight: normal;
 }
 
 button {

@@ -15,7 +15,11 @@ class AppointmentController extends Controller
         $user = Auth::user();
         $appointments = Appointment::withTrashed()
             ->where('user_id', $user->id)
-            ->with('consult')
+            ->with([
+                'consult' => function ($query) {
+                    $query->with(['city', 'county']);
+                }
+            ])
             ->orderBy('appointment_date', 'desc')
             ->get()
             ->map(function ($appointment) {
@@ -44,6 +48,6 @@ class AppointmentController extends Controller
         $appointment->appointment_date = Carbon::parse($request->date)->addHours(3)->format('Y-m-d H:i');
         $appointment->save();
 
-        return redirect()->back()->with('success', 'Programare salvată cu succes.');
+        return redirect()->route('consult.client.appointment.index');
     }
 }

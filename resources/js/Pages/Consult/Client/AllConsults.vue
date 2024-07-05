@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { defineProps, ref, computed } from "vue";
+import { defineProps, ref, computed, defineEmits } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Modal from "@/Components/Modal.vue";
 import DateTime from "@/Components/DateTime.vue"; // Import the new DateTime component
@@ -11,6 +11,21 @@ const props = defineProps({
     consults: Array,
     appointments: Array,
 });
+
+const emit = defineEmits(["consult-clicked"]);
+
+const getMapLink = (consult) => {
+    const address = consult.address;
+    const city = consult.city.name;
+    const county = consult.county.name;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        address + ", " + city + ", " + county
+    )}`;
+};
+
+const handleClick = (consult) => {
+    emit("consult-clicked", consult);
+};
 
 const modalAppointment = ref(false);
 const appointmentDetails = useForm({
@@ -278,10 +293,20 @@ const submit = () => {
                                         {{ consult.description }}
                                     </p>
                                     <p class="card-text text-muted">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        {{ consult.county.name }},
-                                        {{ consult.city.name }},
-                                        {{ consult.address }}
+                                        <a
+                                            class="text-muted"
+                                            style="text-decoration: none"
+                                            :href="getMapLink(consult)"
+                                            target="_blank"
+                                            @click="handleClick(consult)"
+                                        >
+                                            <i
+                                                class="fas fa-map-marker-alt"
+                                            ></i>
+                                            {{ consult.county.name }},
+                                            {{ consult.city.name }},
+                                            {{ consult.address }}
+                                        </a>
                                     </p>
                                 </div>
                                 <div
