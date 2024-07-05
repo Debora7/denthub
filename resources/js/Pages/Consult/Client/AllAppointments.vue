@@ -194,6 +194,9 @@ const changeItemsPerPage = (event) => {
                                                 appointment.status ===
                                                 'Confirmată'
                                                     ? 'badge-success'
+                                                    : appointment.status ===
+                                                      'Onorată'
+                                                    ? 'badge-primary'
                                                     : 'badge-danger',
                                             ]"
                                         >
@@ -345,7 +348,7 @@ const changeItemsPerPage = (event) => {
     border-radius: 0.375rem;
 }
 
-.badge-success {
+.badge-primary {
     color: #000;
     background-color: #28a745;
     font-weight: normal;
@@ -354,6 +357,12 @@ const changeItemsPerPage = (event) => {
 .badge-danger {
     color: #000;
     background-color: #dc3545;
+    font-weight: normal;
+}
+
+.badge-success {
+    color: #000;
+    background-color: #007bff;
     font-weight: normal;
 }
 
