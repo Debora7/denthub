@@ -9,7 +9,6 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const props = defineProps(["appointments"]);
-console.log(props.appointments);
 const emit = defineEmits(["consult-clicked"]);
 
 const getMapLink = (consult) => {
