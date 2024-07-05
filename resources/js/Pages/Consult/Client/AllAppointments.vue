@@ -4,6 +4,7 @@ import { Head } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
 import { defineProps, defineEmits } from "vue";
 import DangerButton from "@/Components/DangerButton.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
@@ -207,7 +208,11 @@ const changeItemsPerPage = (event) => {
                                 <div
                                     class="col-md-6 d-flex flex-column justify-content-end align-items-end"
                                 >
-                                    <SecondaryButton>
+                                    <PrimaryButton
+                                        v-if="appointment.status === 'Onorată'"
+                                        >Recenzie</PrimaryButton
+                                    >
+                                    <SecondaryButton class="ms-3 mt-2">
                                         Editează
                                     </SecondaryButton>
                                     <DangerButton class="ms-3 mt-2">
