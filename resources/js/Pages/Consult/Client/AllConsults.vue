@@ -4,13 +4,12 @@ import { Head, useForm } from "@inertiajs/vue3";
 import { defineProps, ref, computed } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Modal from "@/Components/Modal.vue";
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
+import DateTime from "@/Components/DateTime.vue"; // Import the new DateTime component
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import DangerButton from "@/Components/DangerButton.vue";
 
 const props = defineProps({
     consults: Array,
+    appointments: Array,
 });
 
 const modalAppointment = ref(false);
@@ -19,6 +18,7 @@ const appointmentDetails = useForm({
     doctor: "",
     service: "",
     price: 0.0,
+    consult_time: 0,
     date: new Date(new Date().setHours(8, 0, 0, 0)),
 });
 const now = new Date();
@@ -48,7 +48,7 @@ const filteredConsults = computed(() => {
     const searchLower = searchQuery.value.toLowerCase();
     let consults = props.consults.filter((consult) => {
         const matchesSearch =
-            consult.doctor.toLowerCase().includes(searchLower) ||
+            consult.doctor.name.toLowerCase().includes(searchLower) ||
             consult.service.toLowerCase().includes(searchLower) ||
             consult.city.name.toLowerCase().includes(searchLower) ||
             consult.county.name.toLowerCase().includes(searchLower);
@@ -98,28 +98,72 @@ const toggleSortOrder = () => {
     sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
 };
 
-const disabledDates = (date) => {
-    return date < now;
-};
+const disabledTimeSlots = computed(() => {
+    return props.appointments
+        .filter((app) => app.consult_id === appointmentDetails.consult_id)
+        .map((app) => new Date(app.appointment_date).toISOString());
+});
 
-const disabledHours = (hour) => {
-    const currentHour = now.getHours();
-    const currentDate = now.getDate();
-    const selectedDate = new Date(appointmentDetails.date).getDate();
-    return selectedDate === currentDate && hour < currentHour;
+const parseDoctorSchedule = (schedule) => {
+    const dayMapping = {
+        Luni: 1,
+        Marți: 2,
+        Miercuri: 3,
+        Joi: 4,
+        Vineri: 5,
+        Sâmbătă: 6,
+        Duminică: 0,
+    };
+    const days = [];
+    const timeSlots = {};
+
+    if (typeof schedule === "string") {
+        try {
+            schedule = JSON.parse(schedule);
+        } catch (e) {
+            console.error("Invalid JSON string:", e);
+            return { days, timeSlots };
+        }
+    }
+
+    for (const [day, info] of Object.entries(schedule)) {
+        if (info.enabled) {
+            const dayNumber = dayMapping[day];
+            days.push(dayNumber);
+            timeSlots[dayNumber] = {
+                start: info.start_time,
+                end: info.end_time,
+            };
+        }
+    }
+
+    return { days, timeSlots };
 };
 
 const openModal = (consult) => {
+    const schedule = parseDoctorSchedule(consult.doctor.working_days);
+
     appointmentDetails.consult_id = consult.id;
-    appointmentDetails.doctor = consult.doctor;
+    appointmentDetails.doctor = consult.doctor.name;
     appointmentDetails.service = consult.service;
     appointmentDetails.price = consult.price;
+
+    const consultTimeParts = consult.consult_time.split(":");
+    appointmentDetails.consult_time = consultTimeParts[1]; // Get the minutes part
+
+    appointmentDetails.schedule = schedule;
 
     modalAppointment.value = true;
 };
 
 const closeModal = () => {
     modalAppointment.value = false;
+};
+
+const handleTimeUpdate = (selected) => {
+    const [day, month, year] = selected.date.split(".");
+    const formattedDate = `${year}-${month}-${day}`;
+    appointmentDetails.date = new Date(`${formattedDate}T${selected.time}:00`);
 };
 
 const submit = () => {
@@ -131,7 +175,6 @@ const submit = () => {
     });
 };
 </script>
-
 <template>
     <Head title="Servicii" />
 
@@ -226,7 +269,7 @@ const submit = () => {
                             <div class="row">
                                 <div class="col-md-8">
                                     <h3 class="card-title">
-                                        Dr. {{ consult.doctor }}
+                                        Dr. {{ consult.doctor.name }}
                                     </h3>
                                     <h4 class="card-subtitle mb-2 text-muted">
                                         {{ consult.service }}
@@ -382,25 +425,19 @@ const submit = () => {
 
                 <form @submit.prevent="submit">
                     <div class="mb-4">
-                        <label for="date" class="block text-gray-700 mb-2"
-                            >Selectează o dată și o oră:</label
-                        >
-                        <VueDatePicker
-                            style="align-self: center"
-                            v-model="appointmentDetails.date"
-                            inline
-                            auto-apply
-                            time-picker-inline
-                            minutes-increment="30"
-                            :min-time="{ hours: 8, minutes: 0 }"
-                            :max-time="{ hours: 20, minutes: 0 }"
-                            :disabled-dates="disabledDates"
-                            :disabled-hours="disabledHours"
+                        <DateTime
+                            :days="appointmentDetails.schedule.days"
+                            :timeSlots="appointmentDetails.schedule.timeSlots"
+                            :startDate="now.toISOString().split('T')[0]"
+                            :endDate="'2024-12-31'"
+                            :consult_time="appointmentDetails.consult_time"
+                            :disabledTimeSlots="disabledTimeSlots"
+                            @update:time="handleTimeUpdate"
                         />
                     </div>
 
                     <div class="flex items-center justify-end mt-4">
-                        <DangerButton type="submit">Salvează</DangerButton>
+                        <PrimaryButton type="submit">Salvează</PrimaryButton>
 
                         <SecondaryButton @click="closeModal" class="ms-3">
                             Închide
