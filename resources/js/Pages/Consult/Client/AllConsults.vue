@@ -6,6 +6,8 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Modal from "@/Components/Modal.vue";
 import DateTime from "@/Components/DateTime.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
 
 const props = defineProps({
     consults: Array,
@@ -188,8 +190,13 @@ const submit = () => {
         onFinish: () => {
             appointmentDetails.reset();
             modalAppointment.value = false;
+            showNotification("Programarea a fost salvată");
         },
     });
+};
+
+const showNotification = (message, type = "success") => {
+    toastr[type](message);
 };
 </script>
 <template>

@@ -8,6 +8,8 @@ import NumberInput from "@/Components/NumberInput.vue";
 import TextareaInput from "@/Components/TextareaInput.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
 
 const props = defineProps({
     status: {
@@ -57,8 +59,14 @@ const addService = () => {
 
 const submit = () => {
     form.post(route("consult.store"), {
-        onFinish: () => form.reset(),
+        onFinish: () => {
+            form.reset();
+            showNotification("Serviciile au fost salvate");
+        },
     });
+};
+const showNotification = (message, type = "success") => {
+    toastr[type](message);
 };
 </script>
 <template>

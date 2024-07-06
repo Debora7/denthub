@@ -77,7 +77,7 @@ const appointmentMissed = (id) => {
             showNotification("Programarea a fost marcată ca fiind anulată");
         })
         .catch((error) => {
-            showNotification("A apătur o eroare", "error");
+            showNotification("A apărut o eroare", "error");
         });
 };
 </script>
