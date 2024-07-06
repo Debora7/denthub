@@ -46,7 +46,9 @@ Route::middleware('auth')->group(function () {
         Route::prefix('medic')->name('medic.')->group(function () {
             Route::post('/store', [MedicController::class, 'store'])->name('store');
             Route::get('/index', [MedicController::class, 'index'])->name('index');
+            Route::put('/update', [MedicController::class, 'update'])->name('update');
             Route::get('/allMedics', [MedicController::class, 'allMedics'])->name('allMedics');
+            Route::delete('/delete', [MedicController::class, 'destroy'])->name('destroy');
             Route::get('/appointment-index', [AppointmentController::class, 'appointmentIndex'])->name('appointment.index');
             Route::post('/honored/{id}', [AppointmentController::class, 'honored'])->name('honored');
             Route::post('/missed/{id}', [AppointmentController::class, 'missed'])->name('missed');

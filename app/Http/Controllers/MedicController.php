@@ -44,4 +44,22 @@ class MedicController extends Controller
 
         return Inertia::render('Consult/Medic/AllMedics', ['doctors' => $doctors]);
     }
+
+    public function update(Request $request)
+    {
+        $doctor = Doctor::find($request->id);
+        $doctor->name = $request->doctor;
+        $doctor->working_days = json_encode($request->workingDays);
+
+        $doctor->update();
+
+        return redirect()->route('consult.medic.allMedics');
+    }
+
+    public function destroy(Request $request)
+    {
+        $doctor = Doctor::find($request->id);
+        $doctor->delete();
+        return redirect()->route('consult.medic.allMedics');
+    }
 }
