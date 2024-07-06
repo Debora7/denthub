@@ -5,6 +5,7 @@ import { ref, defineProps, computed } from "vue";
 import axios from "axios";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 const props = defineProps({
     appointments: Array,
@@ -84,6 +85,10 @@ const appointmentMissed = (id) => {
             showNotification("A apărut o eroare", "error");
         });
 };
+
+const openNewAppointmentModal = () => {
+    console.log("Primary button clicked");
+};
 </script>
 
 <template>
@@ -119,6 +124,13 @@ const appointmentMissed = (id) => {
                             v-model="filterDate"
                             class="form-control"
                         />
+                        <PrimaryButton
+                            class="ms-2"
+                            style="border-radius: 7px"
+                            @click="openNewAppointmentModal"
+                        >
+                            Adaugă o programare
+                        </PrimaryButton>
                     </div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
