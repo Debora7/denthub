@@ -4,7 +4,7 @@ import { Head, useForm } from "@inertiajs/vue3";
 import { defineProps, ref, computed, defineEmits } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Modal from "@/Components/Modal.vue";
-import DateTime from "@/Components/DateTime.vue"; // Import the new DateTime component
+import DateTime from "@/Components/DateTime.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 const props = defineProps({
@@ -35,6 +35,7 @@ const appointmentDetails = useForm({
     price: 0.0,
     consult_time: 0,
     date: new Date(new Date().setHours(8, 0, 0, 0)),
+    duration: 0,
 });
 const now = new Date();
 const searchQuery = ref("");
@@ -151,6 +152,7 @@ const parseDoctorSchedule = (schedule) => {
             };
         }
     }
+    console.log(timeSlots);
 
     return { days, timeSlots };
 };

@@ -42,8 +42,44 @@ class AppointmentController extends Controller
         $appointment->user_id = $user_id;
         $appointment->consult_id = $request->consult_id;
         $appointment->appointment_date = Carbon::parse($request->date)->addHours(3)->format('Y-m-d H:i');
+        $appointment->status = 'Confirmată';
         $appointment->save();
 
         return redirect()->route('consult.client.appointment.index');
+    }
+
+    public function appointmentIndex()
+    {
+        $userId = auth()->id();
+        $appointments = Appointment::whereDate('appointment_date', Carbon::now())
+            ->whereHas('consult', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->where('status', 'Confirmată')
+            ->with(['consult', 'user'])
+            ->orderBy('appointment_date')
+            ->get();
+        return Inertia::render('Consult/Medic/AllAppointmentsMedic', ['appointments' => $appointments]);
+    }
+
+    public function honored(Request $request)
+    {
+        $appointment = Appointment::find($request->id);
+        $appointment->status = 'Onorată';
+
+        $appointment->save();
+
+        return redirect()->route('consult.medic.appointment.index');
+    }
+
+
+    public function missed(Request $request)
+    {
+        $appointment = Appointment::find($request->id);
+        $appointment->status = 'Anulată';
+
+        $appointment->save();
+
+        return redirect()->route('consult.medic.appointment.index');
     }
 }
