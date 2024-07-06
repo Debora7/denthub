@@ -13,8 +13,9 @@ class ConsultController extends Controller
 {
     public function index()
     {
+        $user_id = auth()->id();
         $counties = County::with('cities')->get();
-        $doctors = Doctor::all();
+        $doctors = Doctor::where('user_id', $user_id)->get();
 
         return Inertia::render('Consult/NewConsult', [
             'counties' => $counties,

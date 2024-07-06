@@ -13,10 +13,16 @@ class Doctor extends Model
     protected $fillable = [
         'name',
         'working_days',
+        'user_id'
     ];
 
     public function consults()
     {
         return $this->hasMany(Consult::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

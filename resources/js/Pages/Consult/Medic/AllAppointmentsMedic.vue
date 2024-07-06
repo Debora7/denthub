@@ -22,16 +22,20 @@ const currentPage = ref(1);
 const itemsPerPageOptions = [15, 25, 50, 100];
 const itemsPerPage = ref(itemsPerPageOptions[0]);
 const searchQuery = ref("");
+const filterDate = ref(new Date().toISOString().substr(0, 10)); // Default to current date
 
 const filteredAppointments = computed(() => {
-    if (searchQuery.value.trim() === "") {
-        return props.appointments;
-    }
-    return props.appointments.filter((appointment) =>
-        appointment.user.name
-            .toLowerCase()
-            .includes(searchQuery.value.toLowerCase())
-    );
+    return props.appointments.filter((appointment) => {
+        const appointmentDate = new Date(appointment.appointment_date)
+            .toISOString()
+            .substr(0, 10);
+        return (
+            appointmentDate === filterDate.value &&
+            appointment.user.name
+                .toLowerCase()
+                .includes(searchQuery.value.toLowerCase())
+        );
+    });
 });
 
 const paginatedAppointments = computed(() => {
@@ -102,6 +106,18 @@ const appointmentMissed = (id) => {
                             v-model="searchQuery"
                             class="form-control"
                             placeholder="Caută după numele pacientului"
+                        />
+                    </div>
+                    <div class="input-group mb-3">
+                        <span
+                            class="input-group-text"
+                            style="background-color: white"
+                            >Data</span
+                        >
+                        <input
+                            type="date"
+                            v-model="filterDate"
+                            class="form-control"
                         />
                     </div>
                 </div>
