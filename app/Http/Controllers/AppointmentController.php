@@ -81,4 +81,15 @@ class AppointmentController extends Controller
 
         return redirect()->route('consult.medic.appointment.index');
     }
+
+    public function destroy(Request $request)
+    {
+        $appointment = Appointment::find($request->id);
+        if ($appointment) {
+            $appointment->status = 'Anulată';
+            $appointment->save();
+            $appointment->delete(); // Perform the soft delete after saving the status change
+        }
+        return redirect()->route('consult.client.appointment.index');
+    }
 }

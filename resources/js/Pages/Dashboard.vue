@@ -133,11 +133,11 @@ const showNotification = (message, type = "success") => {
 };
 
 const deleteConsult = () => {
-    form.delete(route("consult.destroy"), {
+    form.delete(route("consult.client.appointment.destroy"), {
         onFinish: () => {
             form.reset();
             modalDeleteConsult.value = false;
-            showNotification("Serviciul a fost șters");
+            showNotification("Programarea a fost anulată");
         },
     });
 };

@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
             Route::prefix('appointment')->name('appointment.')->group(function () {
                 Route::post('/store', [AppointmentController::class, 'store'])->name('store');
                 Route::get('/index', [AppointmentController::class, 'index'])->name('index');
+                Route::post('/delete', [AppointmentController::class, 'destroy'])->name('destroy');
             });
         });
     });
