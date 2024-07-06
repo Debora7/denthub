@@ -83,6 +83,16 @@ const userRole = props.auth.user.cui;
                                     Serviciu nou
                                 </NavLink>
                                 <NavLink
+                                    :href="route('consult.medic.allMedics')"
+                                    :active="
+                                        route().current(
+                                            'consult.medic.allMedics'
+                                        )
+                                    "
+                                >
+                                    Medici
+                                </NavLink>
+                                <NavLink
                                     :href="route('consult.medic.index')"
                                     :active="
                                         route().current('consult.medic.index')

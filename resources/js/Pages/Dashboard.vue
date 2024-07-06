@@ -34,6 +34,11 @@ const deleteConsultModal = (consult) => {
     modalDeleteConsult.value = true;
 };
 
+const openReviewModal = (consult) => {
+    // To complete
+    // modalDeleteConsult.value = true;
+};
+
 const modalEditConsult = ref(false);
 const modalDeleteConsult = ref(false);
 const currentPage = ref(1);
@@ -237,7 +242,7 @@ const deleteConsult = () => {
                                             <button
                                                 type="button"
                                                 @click="editConsult(consult)"
-                                                class="inline-flex items-center justify-center text-center p-2 bg-yellow-500 border border-transparent rounded-full text-white hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:shadow-outline-red transition ease-in-out duration-150 ml-2"
+                                                class="inline-flex items-center justify-center text-center p-2 bg-yellow-500 border border-transparent rounded-full text-white hover:bg-yellow-700 active:bg-yellow-900 focus:outline-none focus:border-yellow-900 focus:shadow-outline-yellow transition ease-in-out duration-150 ml-2"
                                             >
                                                 <i class="fas fa-pencil"></i>
                                             </button>
@@ -250,6 +255,15 @@ const deleteConsult = () => {
                                                 class="inline-flex items-center justify-center text-center p-2 bg-red-500 border border-transparent rounded-full text-white hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:shadow-outline-red transition ease-in-out duration-150 ml-2"
                                             >
                                                 <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                @click="
+                                                    openReviewModal(consult)
+                                                "
+                                                class="inline-flex items-center justify-center text-center p-2 bg-blue-500 border border-transparent rounded-full text-white hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:shadow-outline-blue transition ease-in-out duration-150 ml-2"
+                                            >
+                                                <i class="fas fa-star"></i>
                                             </button>
                                         </td>
                                     </tr>

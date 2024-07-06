@@ -31,6 +31,17 @@ class MedicController extends Controller
         $doctor->working_days = json_encode($request->workingDays);
         $doctor->save();
 
-        return redirect()->route('dashboard');
+        return redirect()->route('consult.medic.allMedics');
+    }
+
+    public function allMedics()
+    {
+        $user_id = auth()->id();
+        $doctors = Doctor::where('user_id', $user_id)->get()->map(function ($doctor) {
+            $doctor->working_days_modified = json_decode($doctor->working_days);
+            return $doctor;
+        });
+
+        return Inertia::render('Consult/Medic/AllMedics', ['doctors' => $doctors]);
     }
 }
