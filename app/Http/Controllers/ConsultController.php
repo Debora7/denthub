@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\City;
 use App\Models\Consult;
 use App\Models\County;
 use App\Models\Doctor;

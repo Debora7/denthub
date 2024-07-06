@@ -338,7 +338,9 @@ const openNewAppointmentModal = () => {
                         </div>
                         <div v-else>
                             <div class="p-6 text-gray-900">
-                                Nu aveți programări făcute.
+                                Nu aveți programări făcute momentan. Aici veți
+                                putea vedea toate programările făcute de dvs.
+                                sau clienți.
                             </div>
                         </div>
                     </div>
