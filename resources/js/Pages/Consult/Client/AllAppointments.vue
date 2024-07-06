@@ -6,7 +6,6 @@ import { defineProps, defineEmits } from "vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const props = defineProps(["appointments"]);
@@ -121,25 +120,27 @@ const changeItemsPerPage = (event) => {
                         />
                     </div>
                     <div class="d-flex justify-content-between mb-3">
-                        <VueDatePicker
-                            v-model="selectedDate"
-                            placeholder="Selectează o dată"
-                            class="form-control me-2"
-                            :disabled-dates="disabledDates"
-                            :enable-time-picker="false"
-                            :style="{
-                                backgroundColor: 'transparent',
-                                border: 'none',
-                            }"
-                        />
+                        <div class="input-group">
+                            <span
+                                class="input-group-text"
+                                style="background-color: white"
+                                >Data</span
+                            >
+                            <input
+                                type="date"
+                                v-model="selectedDate"
+                                class="form-control"
+                            />
+                        </div>
                         <select
                             v-model="selectedStatus"
-                            class="form-select me-2"
+                            class="form-select ms-2"
                             aria-label="Select Status"
                         >
                             <option value="">Status</option>
                             <option value="Confirmată">Confirmată</option>
                             <option value="Anulată">Anulată</option>
+                            <option value="Anulată">Onorată</option>
                         </select>
                     </div>
                 </div>

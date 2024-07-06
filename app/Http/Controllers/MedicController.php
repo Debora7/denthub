@@ -23,7 +23,10 @@ class MedicController extends Controller
             'workingDays.*.end_time' => 'nullable|date_format:H:i',
         ]);
 
+        $user_id = auth()->id();
+
         $doctor = new Doctor();
+        $doctor->user_id = $user_id;
         $doctor->name = $request->doctor;
         $doctor->working_days = json_encode($request->workingDays);
         $doctor->save();

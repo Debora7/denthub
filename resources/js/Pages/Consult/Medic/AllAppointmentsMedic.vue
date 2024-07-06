@@ -5,6 +5,7 @@ import { ref, defineProps, computed } from "vue";
 import axios from "axios";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 const props = defineProps({
     appointments: Array,
@@ -22,16 +23,20 @@ const currentPage = ref(1);
 const itemsPerPageOptions = [15, 25, 50, 100];
 const itemsPerPage = ref(itemsPerPageOptions[0]);
 const searchQuery = ref("");
+const filterDate = ref(new Date().toISOString().substr(0, 10)); // Default to current date
 
 const filteredAppointments = computed(() => {
-    if (searchQuery.value.trim() === "") {
-        return props.appointments;
-    }
-    return props.appointments.filter((appointment) =>
-        appointment.user.name
-            .toLowerCase()
-            .includes(searchQuery.value.toLowerCase())
-    );
+    return props.appointments.filter((appointment) => {
+        const appointmentDate = new Date(appointment.appointment_date)
+            .toISOString()
+            .substr(0, 10);
+        return (
+            appointmentDate === filterDate.value &&
+            appointment.user.name
+                .toLowerCase()
+                .includes(searchQuery.value.toLowerCase())
+        );
+    });
 });
 
 const paginatedAppointments = computed(() => {
@@ -80,6 +85,10 @@ const appointmentMissed = (id) => {
             showNotification("A apărut o eroare", "error");
         });
 };
+
+const openNewAppointmentModal = () => {
+    console.log("Primary button clicked");
+};
 </script>
 
 <template>
@@ -103,6 +112,25 @@ const appointmentMissed = (id) => {
                             class="form-control"
                             placeholder="Caută după numele pacientului"
                         />
+                    </div>
+                    <div class="input-group mb-3">
+                        <span
+                            class="input-group-text"
+                            style="background-color: white"
+                            >Data</span
+                        >
+                        <input
+                            type="date"
+                            v-model="filterDate"
+                            class="form-control"
+                        />
+                        <PrimaryButton
+                            class="ms-2"
+                            style="border-radius: 7px"
+                            @click="openNewAppointmentModal"
+                        >
+                            Adaugă o programare
+                        </PrimaryButton>
                     </div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">

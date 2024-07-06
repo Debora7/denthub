@@ -51,10 +51,9 @@ class AppointmentController extends Controller
     public function appointmentIndex()
     {
         $userId = auth()->id();
-        $appointments = Appointment::whereDate('appointment_date', Carbon::now())
-            ->whereHas('consult', function ($query) use ($userId) {
-                $query->where('user_id', $userId);
-            })
+        $appointments = Appointment::whereHas('consult', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })
             ->where('status', 'Confirmată')
             ->with(['consult', 'user'])
             ->orderBy('appointment_date')

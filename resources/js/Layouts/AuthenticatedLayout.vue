@@ -28,7 +28,9 @@ const userRole = props.auth.user.cui;
                                 v-if="userRole !== null"
                             >
                                 <Link
-                                    :href="route('dashboard')"
+                                    :href="
+                                        route('consult.medic.appointment.index')
+                                    "
                                     style="text-decoration: none"
                                 >
                                     <ApplicationLogo
