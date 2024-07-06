@@ -57,6 +57,18 @@ const userRole = props.auth.user.cui;
                                 v-if="userRole !== null"
                             >
                                 <NavLink
+                                    :href="
+                                        route('consult.medic.appointment.index')
+                                    "
+                                    :active="
+                                        route().current(
+                                            'consult.medic.appointment.index'
+                                        )
+                                    "
+                                >
+                                    Programări
+                                </NavLink>
+                                <NavLink
                                     :href="route('dashboard')"
                                     :active="route().current('dashboard')"
                                 >
@@ -74,7 +86,7 @@ const userRole = props.auth.user.cui;
                                         route().current('consult.medic.index')
                                     "
                                 >
-                                    Medic
+                                    Medic nou
                                 </NavLink>
                             </div>
 

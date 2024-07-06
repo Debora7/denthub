@@ -11,6 +11,8 @@ import NumberInput from "@/Components/NumberInput.vue";
 import TextareaInput from "@/Components/TextareaInput.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
 
 const props = defineProps({
     consults: Array,
@@ -116,8 +118,13 @@ const submit = () => {
         onFinish: () => {
             form.reset();
             modalEditConsult.value = false;
+            showNotification("Serviciul a fost editat");
         },
     });
+};
+
+const showNotification = (message, type = "success") => {
+    toastr[type](message);
 };
 
 const deleteConsult = () => {
@@ -125,6 +132,7 @@ const deleteConsult = () => {
         onFinish: () => {
             form.reset();
             modalDeleteConsult.value = false;
+            showNotification("Serviciul a fost șters");
         },
     });
 };

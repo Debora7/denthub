@@ -61,7 +61,7 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         if ($user->cui !== null) {
-            return redirect()->route('dashboard');
+            return redirect()->route('consult.medic.appointment.index');
         } else {
             return redirect()->route('consult.client.index');
         }

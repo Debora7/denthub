@@ -5,7 +5,8 @@ import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { ref } from "vue";
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
 
 const form = useForm({
     doctor: "",
@@ -36,8 +37,15 @@ const daysOfWeek = [
 
 const submit = () => {
     form.post(route("consult.medic.store"), {
-        onFinish: () => form.reset(),
+        onFinish: () => {
+            form.reset();
+            showNotification("Medicul a fost salvat");
+        },
     });
+};
+
+const showNotification = (message, type = "success") => {
+    toastr[type](message);
 };
 </script>
 <template>
