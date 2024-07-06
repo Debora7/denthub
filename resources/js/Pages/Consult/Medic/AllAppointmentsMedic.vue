@@ -149,6 +149,12 @@ const openNewAppointmentModal = () => {
                                             scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                         >
+                                            Telefon
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                        >
                                             Ora programării
                                         </th>
                                         <th
@@ -182,6 +188,11 @@ const openNewAppointmentModal = () => {
                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                                         >
                                             {{ appointment.user.name }}
+                                        </td>
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                                        >
+                                            {{ appointment.user.phone ?? "-" }}
                                         </td>
                                         <td
                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
@@ -338,7 +349,9 @@ const openNewAppointmentModal = () => {
                         </div>
                         <div v-else>
                             <div class="p-6 text-gray-900">
-                                Nu aveți programări făcute.
+                                Nu aveți programări făcute momentan. Aici veți
+                                putea vedea toate programările făcute de dvs.
+                                sau clienți.
                             </div>
                         </div>
                     </div>

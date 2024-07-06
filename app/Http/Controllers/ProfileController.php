@@ -40,6 +40,13 @@ class ProfileController extends Controller
             $validatedData['cui'] = null;
         }
 
+        if ($request->has('phone')) {
+            $validatedData['phone'] = $request->input('phone');
+        } else {
+            // Set cui to null if it's not provided
+            $validatedData['phone'] = null;
+        }
+
         $user->fill($validatedData);
 
         if ($user->isDirty('email')) {

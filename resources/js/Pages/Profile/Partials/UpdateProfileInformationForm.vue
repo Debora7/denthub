@@ -19,6 +19,7 @@ const user = usePage().props.auth.user;
 const form = useForm({
     name: user.name,
     email: user.email,
+    phone: user.phone,
     ...(user.cui ? { cui: user.cui } : {}),
 });
 </script>
@@ -66,6 +67,20 @@ const form = useForm({
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="phone" value="Telefon" />
+                <div class="flex items-center">
+                    <TextInput
+                        id="phone"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.phone"
+                        maxlength="10"
+                    />
+                </div>
+                <InputError class="mt-2" :message="form.errors.phone" />
             </div>
 
             <div v-if="user.cui">

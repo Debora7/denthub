@@ -41,6 +41,7 @@ class RegisteredUserController extends Controller
         $userData = [
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone ? $request->phone : null,
             'password' => Hash::make($request->password),
         ];
 

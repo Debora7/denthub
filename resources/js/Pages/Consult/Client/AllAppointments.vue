@@ -213,9 +213,6 @@ const changeItemsPerPage = (event) => {
                                         v-if="appointment.status === 'Onorată'"
                                         >Recenzie</PrimaryButton
                                     >
-                                    <SecondaryButton class="ms-3 mt-2">
-                                        Editează
-                                    </SecondaryButton>
                                     <DangerButton class="ms-3 mt-2">
                                         Anulează
                                     </DangerButton>
