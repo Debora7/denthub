@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('appointments', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
             $table->foreignId('consult_id')->constrained()->onDelete('cascade');
-            $table->dateTime('appointment_date');
-            $table->softDeletes();
+            $table->integer('rating')->unsigned()->check('rating >= 0 and rating <= 5');
+            $table->text('experience')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('appointments');
+        Schema::dropIfExists('reviews');
     }
 };

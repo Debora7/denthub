@@ -1,15 +1,37 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
+import { Head, useForm } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
 import { defineProps, defineEmits } from "vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import Modal from "@/Components/Modal.vue";
 import "@vuepic/vue-datepicker/dist/main.css";
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
+import Rating from 'primevue/rating';
+import TextareaInput from "@/Components/TextareaInput.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import ModalReview from "@/Components/ModalReview.vue";
 
 const props = defineProps(["appointments"]);
 const emit = defineEmits(["consult-clicked"]);
+const modalDeleteAppointment = ref(false);
+const modalReview = ref(false);
+const selectedAppointment = ref(null);
+const form = useForm({
+    id: null,
+});
+
+const formReview = useForm({
+    id: null,
+    rating: 0,
+    review: "",
+    doctor: "",
+    service: "",
+    consult_id: 0,
+});
 
 const getMapLink = (consult) => {
     const address = consult.address;
@@ -92,6 +114,55 @@ const changePage = (page) => {
 const changeItemsPerPage = (event) => {
     itemsPerPage.value = parseInt(event.target.value);
     currentPage.value = 1;
+};
+
+const openModalDeletAppointment = (appointment) => {
+    selectedAppointment.value = appointment;
+    form.id = appointment.id;
+    modalDeleteAppointment.value = true;
+};
+
+const openReviewModal = (appointment) => {
+    formReview.id = appointment.id;
+    formReview.doctor = appointment.consult.doctor;
+    formReview.service = appointment.consult.service;
+    formReview.consult_id = appointment.consult.id;
+
+    modalReview.value = true;
+};
+
+const closeModalDelete = () => {
+    modalDeleteAppointment.value = false;
+};
+
+const closeReviewModal = () => {
+    modalReview.value = false;
+};
+
+const deleteAppointment = () => {
+    form.post(route("consult.client.appointment.destroy"), {
+        onFinish: () => {
+            modalDeleteAppointment.value = false;
+            showNotification("Programarea a fost anulată");
+        },
+        onError: () => {
+            showNotification("A apărut o eroare", "error");
+        },
+    });
+};
+
+const showNotification = (message, type = "success") => {
+    toastr[type](message);
+};
+
+const submitReview = () => {
+    formReview.post(route("consult.client.appointment.review.store"), {
+        onFinish: () => {
+            formReview.reset();
+            modalReview.value = false;
+            showNotification("Recenzia a fost salvată");
+        },
+    });
 };
 </script>
 
@@ -211,9 +282,17 @@ const changeItemsPerPage = (event) => {
                                 >
                                     <PrimaryButton
                                         v-if="appointment.status === 'Onorată'"
+                                        @click="openReviewModal(appointment)"
                                         >Recenzie</PrimaryButton
                                     >
-                                    <DangerButton class="ms-3 mt-2">
+                                    <DangerButton
+                                        class="ms-3 mt-2"
+                                        @click="
+                                            openModalDeletAppointment(
+                                                appointment
+                                            )
+                                        "
+                                    >
                                         Anulează
                                     </DangerButton>
                                 </div>
@@ -318,6 +397,84 @@ const changeItemsPerPage = (event) => {
                 </div>
             </div>
         </div>
+
+        <Modal :show="modalDeleteAppointment" @close="closeModalDelete">
+            <form @submit.prevent="deleteAppointment">
+                <div v-if="selectedAppointment" class="p-6">
+                    <h5>Dorești să anulezi următoarea programare?</h5>
+                    <p>
+                        <strong>Doctor:</strong>
+                        {{ selectedAppointment.consult.doctor }}
+                    </p>
+                    <p>
+                        <strong>Serviciu:</strong>
+                        {{ selectedAppointment.consult.service }}
+                    </p>
+                    <p>
+                        <strong>Data și ora:</strong>
+                        {{ selectedAppointment.formatted_date }}
+                    </p>
+                    <p>
+                        <strong>Preț:</strong>
+                        {{ selectedAppointment.consult.price }} Lei
+                    </p>
+                    <p>
+                        <strong>Locație:</strong>
+                        {{ selectedAppointment.consult.county.name }},
+                        {{ selectedAppointment.consult.city.name }},
+                        {{ selectedAppointment.consult.address }}
+                    </p>
+                    <div class="mt-6 flex justify-end">
+                        <DangerButton type="submit"> Șterge </DangerButton>
+                        <SecondaryButton @click="closeModalDelete" class="ms-3">
+                            Închide
+                        </SecondaryButton>
+                    </div>
+                </div>
+            </form>
+        </Modal>
+
+        <Modal :show="modalReview" @close="closeReviewModal">
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Lasă o recenzie doctorului {{ formReview.doctor }} pentru
+                    {{ formReview.service }}:
+                </h2>
+
+                <form @submit.prevent="submitReview">
+                    <div class="mt-4">
+                        <InputLabel
+                            for="rating"
+                            value="Câte stele ai da experienței tale?"
+                        />
+                        <Rating
+                            class="mt-1 block w-full"
+                            v-model="formReview.rating" 
+                            :stars="5"
+                        />
+                    </div>
+
+                    <div class="mt-4">
+                        <InputLabel
+                            for="rating"
+                            value="Exteriența ta"
+                        />
+                        <TextareaInput
+                            v-model="formReview.review"
+                            class="mt-1 block w-full"
+                            id="review"
+                        />
+                    </div>
+
+                    <div class="mt-6 flex justify-end">
+                        <PrimaryButton type="submit">Postează</PrimaryButton>
+                        <SecondaryButton @click="closeReviewModal" class="ms-3"
+                            >Închide</SecondaryButton
+                        >
+                    </div>
+                </form>
+            </div>
+        </Modal>
     </AuthenticatedLayout>
 </template>
 
