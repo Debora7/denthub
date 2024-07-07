@@ -10,6 +10,7 @@ use App\Http\Controllers\ConsultController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ConsultClientController;
+use App\Http\Controllers\ReviewsController;
 
 Route::get('/', function () {
     return Inertia::render('Auth/Login');
@@ -61,6 +62,10 @@ Route::middleware('auth')->group(function () {
                 Route::post('/store', [AppointmentController::class, 'store'])->name('store');
                 Route::get('/index', [AppointmentController::class, 'index'])->name('index');
                 Route::post('/delete', [AppointmentController::class, 'destroy'])->name('destroy');
+
+                Route::prefix('review')->name('review.')->group(function () {
+                    Route::post('/store', [ReviewsController::class, 'store'])->name('store');
+                });
             });
         });
     });

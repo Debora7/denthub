@@ -47,4 +47,9 @@ class Consult extends Model
     {
         return $this->belongsTo(Doctor::class);
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

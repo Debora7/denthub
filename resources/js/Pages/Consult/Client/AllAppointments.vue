@@ -10,13 +10,27 @@ import Modal from "@/Components/Modal.vue";
 import "@vuepic/vue-datepicker/dist/main.css";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
+import Rating from 'primevue/rating';
+import TextareaInput from "@/Components/TextareaInput.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import ModalReview from "@/Components/ModalReview.vue";
 
 const props = defineProps(["appointments"]);
 const emit = defineEmits(["consult-clicked"]);
 const modalDeleteAppointment = ref(false);
+const modalReview = ref(false);
 const selectedAppointment = ref(null);
 const form = useForm({
     id: null,
+});
+
+const formReview = useForm({
+    id: null,
+    rating: 0,
+    review: "",
+    doctor: "",
+    service: "",
+    consult_id: 0,
 });
 
 const getMapLink = (consult) => {
@@ -108,8 +122,21 @@ const openModalDeletAppointment = (appointment) => {
     modalDeleteAppointment.value = true;
 };
 
+const openReviewModal = (appointment) => {
+    formReview.id = appointment.id;
+    formReview.doctor = appointment.consult.doctor;
+    formReview.service = appointment.consult.service;
+    formReview.consult_id = appointment.consult.id;
+
+    modalReview.value = true;
+};
+
 const closeModalDelete = () => {
     modalDeleteAppointment.value = false;
+};
+
+const closeReviewModal = () => {
+    modalReview.value = false;
 };
 
 const deleteAppointment = () => {
@@ -126,6 +153,16 @@ const deleteAppointment = () => {
 
 const showNotification = (message, type = "success") => {
     toastr[type](message);
+};
+
+const submitReview = () => {
+    formReview.post(route("consult.client.appointment.review.store"), {
+        onFinish: () => {
+            formReview.reset();
+            modalReview.value = false;
+            showNotification("Recenzia a fost salvată");
+        },
+    });
 };
 </script>
 
@@ -245,6 +282,7 @@ const showNotification = (message, type = "success") => {
                                 >
                                     <PrimaryButton
                                         v-if="appointment.status === 'Onorată'"
+                                        @click="openReviewModal(appointment)"
                                         >Recenzie</PrimaryButton
                                     >
                                     <DangerButton
@@ -394,6 +432,48 @@ const showNotification = (message, type = "success") => {
                     </div>
                 </div>
             </form>
+        </Modal>
+
+        <Modal :show="modalReview" @close="closeReviewModal">
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Lasă o recenzie doctorului {{ formReview.doctor }} pentru
+                    {{ formReview.service }}:
+                </h2>
+
+                <form @submit.prevent="submitReview">
+                    <div class="mt-4">
+                        <InputLabel
+                            for="rating"
+                            value="Câte stele ai da experienței tale?"
+                        />
+                        <Rating
+                            class="mt-1 block w-full"
+                            v-model="formReview.rating" 
+                            :stars="5"
+                        />
+                    </div>
+
+                    <div class="mt-4">
+                        <InputLabel
+                            for="rating"
+                            value="Exteriența ta"
+                        />
+                        <TextareaInput
+                            v-model="formReview.review"
+                            class="mt-1 block w-full"
+                            id="review"
+                        />
+                    </div>
+
+                    <div class="mt-6 flex justify-end">
+                        <PrimaryButton type="submit">Postează</PrimaryButton>
+                        <SecondaryButton @click="closeReviewModal" class="ms-3"
+                            >Închide</SecondaryButton
+                        >
+                    </div>
+                </form>
+            </div>
         </Modal>
     </AuthenticatedLayout>
 </template>
