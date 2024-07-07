@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('consult_id');
+            $table->foreignId('consult_id')->constrained()->onDelete('cascade');
             $table->dateTime('appointment_date');
             $table->softDeletes();
             $table->timestamps();
