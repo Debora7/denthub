@@ -19,7 +19,6 @@ const props = defineProps({
     consults: Array,
     counties: Array,
     doctors: Array,
-    reviews: Array,
 });
 console.log(props.reviews);
 
@@ -40,9 +39,8 @@ const deleteConsultModal = (consult) => {
 };
 
 const openReviewModal = (consult) => {
-    reviews_mapped.value = props.reviews.filter(
-        (review) => review.consult_id === consult.id
-    );
+    reviews_mapped.value = consult.reviews;
+
     modalReview.value = true;
 };
 

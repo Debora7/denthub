@@ -21,14 +21,13 @@ Route::get('/dashboard', function () {
     $user = auth()->user();
     $counties = County::with('cities')->get();
     $doctors = Doctor::all();
-    $reviews = Review::all();
+
     return Inertia::render('Dashboard', [
-        'consults' => Consult::with('city', 'county', 'user')
+        'consults' => Consult::with('city', 'county', 'user', 'reviews')
             ->where('user_id', $user->id)
             ->get(),
         'counties' => $counties,
         'doctors' => $doctors,
-        'reviews' => $reviews
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
