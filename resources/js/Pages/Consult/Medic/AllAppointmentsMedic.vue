@@ -6,10 +6,13 @@ import axios from "axios";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import Modal from "@/Components/Modal.vue";
 
 const props = defineProps({
     appointments: Array,
 });
+
+const modalNewAppointment = ref(false);
 
 const getHour = (appointmentDate) => {
     const date = new Date(appointmentDate);
@@ -87,7 +90,11 @@ const appointmentMissed = (id) => {
 };
 
 const openNewAppointmentModal = () => {
-    console.log("Primary button clicked");
+    modalNewAppointment.value = true;
+};
+
+const closeModalNewAppointment = () => {
+    modalNewAppointment.value = false;
 };
 </script>
 
@@ -358,6 +365,10 @@ const openNewAppointmentModal = () => {
                 </div>
             </div>
         </div>
+
+        <Modal :show="modalNewAppointment" @close="closeModalNewAppointment">
+            <h1>something</h1>
+        </Modal>
     </AuthenticatedLayout>
 </template>
 
