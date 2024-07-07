@@ -1,10 +1,9 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { defineProps, ref, computed, defineEmits } from "vue";
+import { defineProps, ref, computed, defineEmits, watch } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Modal from "@/Components/Modal.vue";
-import DateTime from "@/Components/DateTime.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
@@ -18,6 +17,16 @@ const props = defineProps({
 
 const reviews_mapped = ref([]);
 const modalReview = ref(false);
+const appointmentDetails = useForm({
+    doctor: "",
+    doctor_id: 0,
+    service: "",
+    consult_id: 0,
+    price: 0,
+    date: "",
+    consult_time: 0,
+    time: "",
+});
 
 const openReviewModal = (consult) => {
     reviews_mapped.value = consult.reviews;
@@ -45,16 +54,6 @@ const handleClick = (consult) => {
 };
 
 const modalAppointment = ref(false);
-const appointmentDetails = useForm({
-    consult_id: 0,
-    doctor: "",
-    service: "",
-    price: 0.0,
-    consult_time: 0,
-    date: new Date(new Date().setHours(8, 0, 0, 0)),
-    duration: 0,
-});
-const now = new Date();
 const searchQuery = ref("");
 const currentPage = ref(1);
 const itemsPerPageOptions = [15, 25, 50, 100];
@@ -141,80 +140,176 @@ const toggleSortOrder = () => {
     sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
 };
 
-const disabledTimeSlots = computed(() => {
-    return props.appointments
-        .filter((app) => app.consult_id === appointmentDetails.consult_id)
-        .map((app) => new Date(app.appointment_date).toISOString());
+const workingDays = ref({});
+const timeSlots = ref([]);
+
+const minDate = computed(() => {
+    const today = new Date();
+    return today.toISOString().split("T")[0];
 });
 
-const parseDoctorSchedule = (schedule) => {
-    const dayMapping = {
-        Luni: 1,
-        Marți: 2,
-        Miercuri: 3,
-        Joi: 4,
-        Vineri: 5,
-        Sâmbătă: 6,
-        Duminică: 0,
-    };
-    const days = [];
-    const timeSlots = {};
+const maxDate = computed(() => {
+    const nextYear = new Date();
+    nextYear.setFullYear(nextYear.getFullYear() + 1);
+    return nextYear.toISOString().split("T")[0];
+});
 
-    if (typeof schedule === "string") {
-        try {
-            schedule = JSON.parse(schedule);
-        } catch (e) {
-            console.error("Invalid JSON string:", e);
-            return { days, timeSlots };
-        }
+const isWorkingDay = (dateString) => {
+    if (!dateString) return true;
+
+    const date = new Date(dateString);
+
+    const dayOfWeek = date.toLocaleDateString("ro-RO", { weekday: "long" });
+    const dayKey = dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1);
+
+    return JSON.parse(workingDays.value)[dayKey].enabled || false;
+};
+
+const calculateTimeSlots = (workingDays, consultTime) => {
+    const selectedDate = new Date(appointmentDetails.date);
+    const dayOfWeek = selectedDate.toLocaleDateString("ro-RO", {
+        weekday: "long",
+    });
+    const dayKey = dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1);
+    const dayInfo = workingDays[dayKey];
+
+    if (!dayInfo || !dayInfo.enabled) {
+        timeSlots.value = [];
+        return;
     }
 
-    for (const [day, info] of Object.entries(schedule)) {
-        if (info.enabled) {
-            const dayNumber = dayMapping[day];
-            days.push(dayNumber);
-            timeSlots[dayNumber] = {
-                start: info.start_time,
-                end: info.end_time,
-            };
-        }
-    }
-    console.log(timeSlots);
+    const slots = [];
+    const startTime = parseTime(dayInfo.start_time);
+    const endTime = parseTime(dayInfo.end_time);
+    let currentTime = new Date(startTime);
+    const consultDuration = parseDuration(consultTime);
 
-    return { days, timeSlots };
+    while (currentTime < endTime) {
+        slots.push(formatTime(currentTime));
+        currentTime.setMinutes(
+            currentTime.getMinutes() + consultDuration.minutes
+        );
+    }
+    timeSlots.value = filterTimeSlots(
+        props.appointments,
+        appointmentDetails,
+        slots
+    );
+};
+
+const filterTimeSlots = (appointments, appointmentDetails, timeSlots) => {
+    let filteredTimeSlots = [...timeSlots]; // Start with the original time slots
+
+    appointments.forEach((appointment) => {
+        if (
+            appointment.doctor_id === appointmentDetails.doctor_id &&
+            appointment.consult_id === appointmentDetails.consult_id &&
+            new Date(appointment.appointment_date)
+                .toISOString()
+                .split("T")[0] === appointmentDetails.date
+        ) {
+            const appointmentTime =
+                new Date(appointment.appointment_date)
+                    .toTimeString()
+                    .split(":")[0] +
+                ":" +
+                new Date(appointment.appointment_date)
+                    .toTimeString()
+                    .split(":")[1];
+            filteredTimeSlots = filteredTimeSlots.filter(
+                (timeSlot) => timeSlot !== appointmentTime
+            );
+        } else if (
+            appointment.doctor_id === appointmentDetails.doctor_id &&
+            new Date(appointment.appointment_date)
+                .toISOString()
+                .split("T")[0] === appointmentDetails.date
+        ) {
+            const appointmentTimeStart =
+                new Date(appointment.appointment_date)
+                    .toTimeString()
+                    .split(":")[0] +
+                ":" +
+                new Date(appointment.appointment_date)
+                    .toTimeString()
+                    .split(":")[1];
+            const appointmentTimeEnd =
+                new Date(appointment.appointment_date_end)
+                    .toTimeString()
+                    .split(":")[0] +
+                ":" +
+                new Date(appointment.appointment_date_end)
+                    .toTimeString()
+                    .split(":")[1];
+
+            filteredTimeSlots = filteredTimeSlots.filter((timeSlot) => {
+                return (
+                    timeSlot < appointmentTimeStart ||
+                    timeSlot >= appointmentTimeEnd
+                );
+            });
+        }
+    });
+
+    return filteredTimeSlots;
+};
+
+const parseTime = (timeString) => {
+    const [hours, minutes] = timeString.split(":").map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0);
+    return date;
+};
+
+const parseDuration = (duration) => {
+    const [hours, minutes, seconds] = duration.split(":").map(Number);
+    return { hours, minutes, seconds };
+};
+
+const formatTime = (date) => {
+    return date.toTimeString().slice(0, 5);
 };
 
 const openModal = (consult) => {
-    const schedule = parseDoctorSchedule(consult.doctor.working_days);
-
-    appointmentDetails.consult_id = consult.id;
     appointmentDetails.doctor = consult.doctor.name;
+    appointmentDetails.doctor_id = consult.doctor.id;
+    appointmentDetails.consult_id = consult.id;
     appointmentDetails.service = consult.service;
     appointmentDetails.price = consult.price;
-
-    const consultTimeParts = consult.consult_time.split(":");
-    appointmentDetails.consult_time = consultTimeParts[1]; // Get the minutes part
-
-    appointmentDetails.schedule = schedule;
+    appointmentDetails.consult_time = consult.consult_time;
+    workingDays.value = consult.doctor.working_days;
 
     modalAppointment.value = true;
 };
 
-const closeModal = () => {
-    modalAppointment.value = false;
+watch(
+    () => appointmentDetails.date,
+    (newDate) => {
+        if (newDate) {
+            const consultTime = appointmentDetails.consult_time;
+            calculateTimeSlots(JSON.parse(workingDays.value), consultTime);
+        }
+    }
+);
+
+const selectedSlot = ref(null);
+
+const selectSlot = (slot) => {
+    selectedSlot.value = slot;
+    appointmentDetails.time = slot;
 };
 
-const handleTimeUpdate = (selected) => {
-    const [day, month, year] = selected.date.split(".");
-    const formattedDate = `${year}-${month}-${day}`;
-    appointmentDetails.date = new Date(`${formattedDate}T${selected.time}:00`);
+const closeModal = () => {
+    modalAppointment.value = false;
+    appointmentDetails.reset();
+    timeSlots.value = [];
 };
 
 const submit = () => {
     appointmentDetails.post(route("consult.client.appointment.store"), {
         onFinish: () => {
-            appointmentDetails.reset();
             modalAppointment.value = false;
+            appointmentDetails.reset();
             showNotification("Programarea a fost salvată");
         },
     });
@@ -492,16 +587,49 @@ const showNotification = (message, type = "success") => {
                 </p>
 
                 <form @submit.prevent="submit">
-                    <div class="mb-4">
-                        <DateTime
-                            :days="appointmentDetails.schedule.days"
-                            :timeSlots="appointmentDetails.schedule.timeSlots"
-                            :startDate="now.toISOString().split('T')[0]"
-                            :endDate="'2024-12-31'"
-                            :consult_time="appointmentDetails.consult_time"
-                            :disabledTimeSlots="disabledTimeSlots"
-                            @update:time="handleTimeUpdate"
+                    <div class="mt-4">
+                        <label
+                            for="appointmentDate"
+                            class="block text-sm font-medium text-gray-700"
+                        >
+                            Selectează data programării:
+                        </label>
+                        <input
+                            type="date"
+                            id="appointmentDate"
+                            v-model="appointmentDetails.date"
+                            :min="minDate"
+                            :max="maxDate"
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                         />
+                        <p
+                            v-if="!isWorkingDay(appointmentDetails.date)"
+                            class="text-danger"
+                        >
+                            Medicul nu are program în această zi.
+                        </p>
+                    </div>
+
+                    <div
+                        v-if="isWorkingDay(appointmentDetails.date)"
+                        class="mt-2"
+                    >
+                        <label class="block text-sm font-medium text-gray-700"
+                            >Selectează Ora:</label
+                        >
+                        <div class="mt-2">
+                            <span
+                                v-for="slot in timeSlots"
+                                :key="slot"
+                                :class="[
+                                    'badge',
+                                    { 'badge-selected': slot === selectedSlot },
+                                ]"
+                                @click="selectSlot(slot)"
+                            >
+                                {{ slot }}
+                            </span>
+                        </div>
                     </div>
 
                     <div class="flex items-center justify-end mt-4">
@@ -559,5 +687,20 @@ const showNotification = (message, type = "success") => {
 
 .card-text {
     font-size: 1rem;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.5em;
+    margin: 0.2em;
+    background-color: #28a745;
+    border-radius: 0.25em;
+    cursor: pointer;
+    color: #fff;
+    font-weight: normal;
+}
+
+.badge-selected {
+    background-color: #007bff;
 }
 </style>
