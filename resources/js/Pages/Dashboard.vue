@@ -13,12 +13,17 @@ import DangerButton from "@/Components/DangerButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
+import ModalReview from "@/Components/ModalReview.vue";
 
 const props = defineProps({
     consults: Array,
     counties: Array,
     doctors: Array,
+    reviews: Array,
 });
+console.log(props.reviews);
+
+const reviews_mapped = ref([]);
 
 const deleteConsultModal = (consult) => {
     form.doctor = consult.doctor;
@@ -35,12 +40,15 @@ const deleteConsultModal = (consult) => {
 };
 
 const openReviewModal = (consult) => {
-    // To complete
-    // modalDeleteConsult.value = true;
+    reviews_mapped.value = props.reviews.filter(
+        (review) => review.consult_id === consult.id
+    );
+    modalReview.value = true;
 };
 
 const modalEditConsult = ref(false);
 const modalDeleteConsult = ref(false);
+const modalReview = ref(false);
 const currentPage = ref(1);
 const itemsPerPageOptions = [15, 25, 50, 100];
 const itemsPerPage = ref(itemsPerPageOptions[0]);
@@ -86,6 +94,10 @@ const closeModalEdit = () => {
 
 const closeModalDelete = () => {
     modalDeleteConsult.value = false;
+};
+
+const closeModalReview = () => {
+    modalReview.value = false;
 };
 
 const form = useForm({
@@ -713,6 +725,12 @@ const deleteConsult = () => {
                 </div>
             </header>
         </Modal>
+
+        <ModalReview
+            :show="modalReview"
+            :reviews="reviews_mapped"
+            @close="closeModalReview"
+        />
     </AuthenticatedLayout>
 </template>
 
