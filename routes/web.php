@@ -3,14 +3,15 @@
 use Inertia\Inertia;
 use App\Models\County;
 use App\Models\Doctor;
+use App\Models\Review;
 use App\Models\Consult;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MedicController;
 use App\Http\Controllers\ConsultController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ConsultClientController;
-use App\Http\Controllers\ReviewsController;
 
 Route::get('/', function () {
     return Inertia::render('Auth/Login');
@@ -20,8 +21,9 @@ Route::get('/dashboard', function () {
     $user = auth()->user();
     $counties = County::with('cities')->get();
     $doctors = Doctor::all();
+
     return Inertia::render('Dashboard', [
-        'consults' => Consult::with('city', 'county', 'user')
+        'consults' => Consult::with('city', 'county', 'user', 'reviews')
             ->where('user_id', $user->id)
             ->get(),
         'counties' => $counties,

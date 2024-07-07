@@ -8,11 +8,26 @@ import DateTime from "@/Components/DateTime.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
+import ModalReview from "@/Components/ModalReview.vue";
+import Rating from "primevue/rating";
 
 const props = defineProps({
     consults: Array,
     appointments: Array,
 });
+
+const reviews_mapped = ref([]);
+const modalReview = ref(false);
+
+const openReviewModal = (consult) => {
+    reviews_mapped.value = consult.reviews;
+
+    modalReview.value = true;
+};
+
+const closeModalReview = () => {
+    modalReview.value = false;
+};
 
 const emit = defineEmits(["consult-clicked"]);
 
@@ -88,7 +103,17 @@ const filteredConsults = computed(() => {
         consults = consults.sort((a, b) => b.price - a.price);
     }
 
-    return consults;
+    return consults.map((consult) => {
+        const totalRating = consult.reviews.reduce(
+            (acc, review) => acc + review.rating,
+            0
+        );
+        const averageRating =
+            consult.reviews.length > 0
+                ? totalRating / consult.reviews.length
+                : 0;
+        return { ...consult, averageRating };
+    });
 });
 
 const paginatedConsults = computed(() => {
@@ -199,6 +224,7 @@ const showNotification = (message, type = "success") => {
     toastr[type](message);
 };
 </script>
+
 <template>
     <Head title="Servicii" />
 
@@ -322,6 +348,14 @@ const showNotification = (message, type = "success") => {
                                     class="col-md-4 d-flex flex-column justify-content-between"
                                     style="text-align: left"
                                 >
+                                    <div @click="openReviewModal(consult)">
+                                        <Rating
+                                            v-model="consult.averageRating"
+                                            class="block w-full mb-2"
+                                            :stars="5"
+                                            readonly
+                                        />
+                                    </div>
                                     <p
                                         class="card-text"
                                         style="font-size: 20px"
@@ -480,6 +514,12 @@ const showNotification = (message, type = "success") => {
                 </form>
             </div>
         </Modal>
+
+        <ModalReview
+            :show="modalReview"
+            :reviews="reviews_mapped"
+            @close="closeModalReview"
+        />
     </AuthenticatedLayout>
 </template>
 

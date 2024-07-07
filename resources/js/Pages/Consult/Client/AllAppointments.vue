@@ -13,7 +13,6 @@ import "toastr/build/toastr.min.css";
 import Rating from 'primevue/rating';
 import TextareaInput from "@/Components/TextareaInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
-import ModalReview from "@/Components/ModalReview.vue";
 
 const props = defineProps(["appointments"]);
 const emit = defineEmits(["consult-clicked"]);
@@ -287,6 +286,7 @@ const submitReview = () => {
                                     >
                                     <DangerButton
                                         class="ms-3 mt-2"
+                                        v-if="appointment.status === 'Confirmată'"
                                         @click="
                                             openModalDeletAppointment(
                                                 appointment
