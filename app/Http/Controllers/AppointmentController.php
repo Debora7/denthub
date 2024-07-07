@@ -40,8 +40,12 @@ class AppointmentController extends Controller
 
         $appointment = new Appointment();
         $appointment->user_id = $user_id;
+        $appointment->doctor_id = $request->doctor_id;
         $appointment->consult_id = $request->consult_id;
-        $appointment->appointment_date = Carbon::parse($request->date)->addHours(3)->format('Y-m-d H:i');
+        $appointment->appointment_date = Carbon::parse("{$request->date} {$request->time}")->format('Y-m-d H:i');
+        $appointment->appointment_date_end = Carbon::parse("{$request->date} {$request->time}")
+            ->addMinutes((int)explode(':', $request->consult_time)[1])
+            ->format('Y-m-d H:i');
         $appointment->status = 'Confirmată';
         $appointment->save();
 

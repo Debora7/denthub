@@ -13,6 +13,6 @@ class ConsultClientController extends Controller
         $consults = Consult::with(['city', 'county', 'doctor', 'reviews'])->get();
         $appointments = Appointment::all();
 
-        return Inertia::render('Consult/Client/AllConsults', ['consults' => $consults, 'appointments' => $appointments]);
+        return Inertia::render('Consult/Client/AllConsultsClient', ['consults' => $consults, 'appointments' => $appointments]);
     }
 }
