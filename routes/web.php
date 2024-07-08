@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function () {
 
         Route::prefix('medic')->name('medic.')->group(function () {
             Route::post('/store', [MedicController::class, 'store'])->name('store');
+            Route::post('/consult-store', [MedicController::class, 'consultStore'])->name('consult.store');
             Route::get('/index', [MedicController::class, 'index'])->name('index');
             Route::put('/update', [MedicController::class, 'update'])->name('update');
             Route::get('/allMedics', [MedicController::class, 'allMedics'])->name('allMedics');

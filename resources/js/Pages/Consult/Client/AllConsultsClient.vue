@@ -9,6 +9,7 @@ import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 import ModalReview from "@/Components/ModalReview.vue";
 import Rating from "primevue/rating";
+import InputLabel from "@/Components/InputLabel.vue";
 
 const props = defineProps({
     consults: Array,
@@ -588,12 +589,11 @@ const showNotification = (message, type = "success") => {
 
                 <form @submit.prevent="submit">
                     <div class="mt-4">
-                        <label
+                        <InputLabel
                             for="appointmentDate"
-                            class="block text-sm font-medium text-gray-700"
-                        >
-                            Selectează data programării:
-                        </label>
+                            value="Selectează data programării"
+                            :required="true"
+                        />
                         <input
                             type="date"
                             id="appointmentDate"
@@ -611,12 +611,16 @@ const showNotification = (message, type = "success") => {
                     </div>
 
                     <div
-                        v-if="isWorkingDay(appointmentDetails.date)"
+                        v-if="
+                            appointmentDetails.date &&
+                            isWorkingDay(appointmentDetails.date)
+                        "
                         class="mt-2"
                     >
-                        <label class="block text-sm font-medium text-gray-700"
-                            >Selectează Ora:</label
-                        >
+                        <InputLabel
+                            value="Selectează ora programării"
+                            :required="true"
+                        />
                         <div class="mt-2">
                             <span
                                 v-for="slot in timeSlots"

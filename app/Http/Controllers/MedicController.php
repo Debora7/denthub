@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Doctor;
+use App\Models\Appointment;
 use Illuminate\Http\Request;
 
 class MedicController extends Controller
@@ -61,5 +64,34 @@ class MedicController extends Controller
         $doctor = Doctor::find($request->id);
         $doctor->delete();
         return redirect()->route('consult.medic.allMedics');
+    }
+
+    public function consultStore(Request $request)
+    {
+        $user = new User();
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone ? $request->phone : null;
+        $user->password = '12345678';
+
+        $user->save();
+
+        $userId = $user->id;
+
+        $appointment = new Appointment();
+
+        $appointment->doctor_id = $request->doctor;
+        $appointment->consult_id  = $request->consult;
+        $appointment->user_id  = $userId;
+        $appointment->status  = 'Confirmată';
+        $appointment->appointment_date = Carbon::parse("{$request->date} {$request->time}")->format('Y-m-d H:i');
+        $appointment->appointment_date_end = Carbon::parse("{$request->date} {$request->time}")
+            ->addMinutes((int)explode(':', $request->consult_time)[1])
+            ->format('Y-m-d H:i');
+
+        $appointment->save();
+
+        return redirect()->route('consult.medic.appointment.index');
     }
 }

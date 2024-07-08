@@ -80,7 +80,11 @@ const showNotification = (message, type = "success") => {
                         <form @submit.prevent="submit">
                             <!-- Medic -->
                             <div>
-                                <InputLabel for="doctor" value="Medic" />
+                                <InputLabel
+                                    for="doctor"
+                                    value="Medic"
+                                    :required="true"
+                                />
                                 <select
                                     id="doctor"
                                     class="mt-1 block w-full"
@@ -117,6 +121,7 @@ const showNotification = (message, type = "success") => {
                                         <InputLabel
                                             :for="`service-${index}`"
                                             value="Serviciul oferit"
+                                            :required="true"
                                         />
                                         <TextInput
                                             :id="`service-${index}`"
@@ -139,6 +144,7 @@ const showNotification = (message, type = "success") => {
                                         <InputLabel
                                             :for="`price-${index}`"
                                             value="Preț"
+                                            :required="true"
                                         />
                                         <NumberInput
                                             :id="`price-${index}`"
@@ -162,6 +168,7 @@ const showNotification = (message, type = "success") => {
                                         <InputLabel
                                             :for="`time-${index}`"
                                             value="Timp (minute)"
+                                            :required="true"
                                         />
                                         <select
                                             :id="`time-${index}`"
@@ -197,6 +204,7 @@ const showNotification = (message, type = "success") => {
                                     <InputLabel
                                         :for="`description-${index}`"
                                         value="Descrierea serviciului"
+                                        :required="true"
                                     />
                                     <TextareaInput
                                         :id="`description-${index}`"
@@ -234,6 +242,7 @@ const showNotification = (message, type = "success") => {
                                 <InputLabel
                                     for="address"
                                     value="Adresa completă"
+                                    :required="true"
                                 />
 
                                 <TextInput
@@ -253,7 +262,11 @@ const showNotification = (message, type = "success") => {
                             <!-- Oraș și Județ -->
                             <div class="mt-4 flex space-x-4">
                                 <div class="flex-1">
-                                    <InputLabel for="county" value="Județ" />
+                                    <InputLabel
+                                        for="county"
+                                        value="Județ"
+                                        :required="true"
+                                    />
                                     <select
                                         id="county"
                                         class="mt-1 block w-full"
@@ -282,7 +295,11 @@ const showNotification = (message, type = "success") => {
                                 </div>
 
                                 <div class="flex-1">
-                                    <InputLabel for="city" value="Oraș" />
+                                    <InputLabel
+                                        for="city"
+                                        value="Oraș"
+                                        :required="true"
+                                    />
                                     <select
                                         id="city"
                                         class="mt-1 block w-full"

@@ -57,7 +57,11 @@ const switchTab = (tab) => {
         <form @submit.prevent="submit">
             <template v-if="selectedTab === 'client'">
                 <div>
-                    <InputLabel for="name" value="Nume" />
+                    <InputLabel
+                        for="name"
+                        value="Nume complet"
+                        :required="true"
+                    />
                     <TextInput
                         id="name"
                         type="text"
@@ -71,7 +75,7 @@ const switchTab = (tab) => {
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="email" value="Email" />
+                    <InputLabel for="email" value="Email" :required="true" />
                     <TextInput
                         id="email"
                         type="email"
@@ -98,7 +102,11 @@ const switchTab = (tab) => {
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="password" value="Parolă" />
+                    <InputLabel
+                        for="password"
+                        value="Parolă"
+                        :required="true"
+                    />
                     <TextInput
                         id="password"
                         type="password"
@@ -114,6 +122,7 @@ const switchTab = (tab) => {
                     <InputLabel
                         for="password_confirmation"
                         value="Confirmă parola"
+                        :required="true"
                     />
                     <TextInput
                         id="password_confirmation"
@@ -132,7 +141,11 @@ const switchTab = (tab) => {
 
             <template v-if="selectedTab === 'dentist'">
                 <div>
-                    <InputLabel for="name" value="Nume" />
+                    <InputLabel
+                        for="name"
+                        value="Nume complet"
+                        :required="true"
+                    />
                     <TextInput
                         id="name"
                         type="text"
@@ -146,7 +159,7 @@ const switchTab = (tab) => {
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="cui" value="CUI" />
+                    <InputLabel for="cui" value="CUI" :required="true" />
                     <TextInput
                         id="cui"
                         type="text"
@@ -160,7 +173,7 @@ const switchTab = (tab) => {
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="email" value="Email" />
+                    <InputLabel for="email" value="Email" :required="true" />
                     <TextInput
                         id="email"
                         type="email"
@@ -187,7 +200,11 @@ const switchTab = (tab) => {
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="password" value="Parolă" />
+                    <InputLabel
+                        for="password"
+                        value="Parolă"
+                        :required="true"
+                    />
                     <TextInput
                         id="password"
                         type="password"
@@ -203,6 +220,7 @@ const switchTab = (tab) => {
                     <InputLabel
                         for="password_confirmation"
                         value="Confirmă parola"
+                        :required="true"
                     />
                     <TextInput
                         id="password_confirmation"

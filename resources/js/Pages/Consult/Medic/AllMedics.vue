@@ -296,7 +296,7 @@ const deleteMedic = () => {
                 <form @submit.prevent="submit">
                     <!-- Nume si prenume -->
                     <div>
-                        <InputLabel for="doctor" value="Nume și prenume" />
+                        <InputLabel for="doctor" value="Nume complet" />
                         <TextInput
                             id="doctor"
                             type="text"
