@@ -147,7 +147,9 @@ const timeSlots = ref([]);
 
 const minDate = computed(() => {
     const today = new Date();
-    return today.toISOString().split("T")[0];
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    return tomorrow.toISOString().split("T")[0];
 });
 
 const maxDate = computed(() => {
