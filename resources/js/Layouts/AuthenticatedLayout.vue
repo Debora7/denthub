@@ -317,7 +317,7 @@ const userRole = props.auth.user.cui;
                                         class="text-gray-600 hover:text-gray-900"
                                         style="text-decoration: none"
                                     >
-                                        Termenii și condiții
+                                        Termene și condiții
                                     </a>
                                 </li>
                                 <li>

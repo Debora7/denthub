@@ -29,7 +29,8 @@ Route::get('/dashboard', function () {
         'counties' => $counties,
         'doctors' => $doctors,
     ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware('auth')->name('dashboard');
+// ->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/welcome', function () {
     return Inertia::render('Welcome');
