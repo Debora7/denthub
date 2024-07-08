@@ -78,6 +78,7 @@ const form = useForm({
                         class="mt-1 block w-full"
                         v-model="form.phone"
                         maxlength="10"
+                        @input="form.phone = form.phone.replace(/\D/g, '')"
                     />
                 </div>
                 <InputError class="mt-2" :message="form.errors.phone" />
