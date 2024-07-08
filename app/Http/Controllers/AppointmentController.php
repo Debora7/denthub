@@ -64,7 +64,9 @@ class AppointmentController extends Controller
             ->orderBy('appointment_date')
             ->get();
         $doctos = Doctor::with('consults')->get();
-        return Inertia::render('Consult/Medic/AllAppointmentsMedic', ['appointments' => $appointments, 'doctors' => $doctos]);
+        $allAppointments = Appointment::all();
+
+        return Inertia::render('Consult/Medic/AllAppointmentsMedic', ['appointments' => $appointments, 'doctors' => $doctos, 'allAppointments' => $allAppointments]);
     }
 
     public function honored(Request $request)
