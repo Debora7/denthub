@@ -1,16 +1,42 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
-import { ref, defineProps, computed } from "vue";
+import { Head, useForm } from "@inertiajs/vue3";
+import { ref, defineProps, computed, watch } from "vue";
 import axios from "axios";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Modal from "@/Components/Modal.vue";
+import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
 
 const props = defineProps({
     appointments: Array,
+    doctors: Array,
 });
+
+const form = useForm({
+    name: "",
+    email: "",
+    phone: "",
+    doctor: "",
+    consult: "",
+});
+
+const consults = ref([]);
+
+const updateCities = (selecteDoctorId) => {
+    const doctor = props.doctors.find((c) => c.id === selecteDoctorId);
+    consults.value = doctor ? doctor.consults : [];
+};
+
+watch(
+    () => form.doctor,
+    (newDoctor) => {
+        updateCities(newDoctor);
+    }
+);
 
 const modalNewAppointment = ref(false);
 
@@ -95,7 +121,10 @@ const openNewAppointmentModal = () => {
 
 const closeModalNewAppointment = () => {
     modalNewAppointment.value = false;
+    form.reset();
 };
+
+const submit = () => {};
 </script>
 
 <template>
@@ -367,7 +396,111 @@ const closeModalNewAppointment = () => {
         </div>
 
         <Modal :show="modalNewAppointment" @close="closeModalNewAppointment">
-            <h1>something</h1>
+            <div class="p-6">
+                <form @submit.prevent="submit">
+                    <div>
+                        <InputLabel
+                            for="name"
+                            value="Nume complet"
+                            :required="true"
+                        />
+                        <TextInput
+                            id="name"
+                            type="text"
+                            class="mt-1 block w-full"
+                            v-model="form.name"
+                            required
+                            autofocus
+                            autocomplete="name"
+                        />
+                        <InputError class="mt-2" :message="form.errors.name" />
+                    </div>
+
+                    <div class="mt-4">
+                        <InputLabel
+                            for="email"
+                            value="Email"
+                            :required="true"
+                        />
+                        <TextInput
+                            id="email"
+                            type="email"
+                            class="mt-1 block w-full"
+                            v-model="form.email"
+                            required
+                            autocomplete="username"
+                        />
+                        <InputError class="mt-2" :message="form.errors.email" />
+                    </div>
+
+                    <div class="mt-4">
+                        <InputLabel for="phone" value="Telefon" />
+                        <div class="flex items-center">
+                            <TextInput
+                                id="phone"
+                                type="text"
+                                class="mt-1 block w-full"
+                                v-model="form.phone"
+                                maxlength="10"
+                            />
+                        </div>
+                        <InputError class="mt-2" :message="form.errors.phone" />
+                    </div>
+
+                    <div class="mt-4">
+                        <InputLabel
+                            for="doctor"
+                            value="Medic"
+                            :required="true"
+                        />
+                        <select
+                            id="doctor"
+                            class="mt-1 block w-full"
+                            v-model="form.doctor"
+                            required
+                            style="border-radius: 5px; border-color: lightgray"
+                        >
+                            <option value="">Selectează medicul</option>
+                            <option
+                                v-for="doctor in props.doctors"
+                                :key="doctor.id"
+                                :value="doctor.id"
+                            >
+                                {{ doctor.name }}
+                            </option>
+                        </select>
+                        <InputError
+                            class="mt-2"
+                            :message="form.errors.doctor"
+                        />
+                    </div>
+
+                    <div class="mt-4">
+                        <InputLabel
+                            for="consult"
+                            value="Serviciu"
+                            :required="true"
+                        />
+                        <select
+                            id="consult"
+                            class="mt-1 block w-full"
+                            v-model="form.consult"
+                            required
+                            style="border-radius: 5px; border-color: lightgray"
+                        >
+                            <option value="">Selectează serviciul</option>
+                            <option
+                                v-for="consult in consults"
+                                :key="consult.id"
+                                :value="consult.id"
+                            >
+                                {{ consult.service }}
+                            </option>
+                        </select>
+                        <InputError class="mt-2" :message="form.errors.city" />
+                    </div>
+                </form>
+            </div>
         </Modal>
     </AuthenticatedLayout>
 </template>

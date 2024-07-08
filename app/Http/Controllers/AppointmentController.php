@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use App\Models\Appointment;
+use App\Models\Doctor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -62,7 +63,8 @@ class AppointmentController extends Controller
             ->with(['consult', 'user'])
             ->orderBy('appointment_date')
             ->get();
-        return Inertia::render('Consult/Medic/AllAppointmentsMedic', ['appointments' => $appointments]);
+        $doctos = Doctor::with('consults')->get();
+        return Inertia::render('Consult/Medic/AllAppointmentsMedic', ['appointments' => $appointments, 'doctors' => $doctos]);
     }
 
     public function honored(Request $request)
