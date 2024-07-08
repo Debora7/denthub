@@ -50,6 +50,14 @@ class MedicController extends Controller
 
     public function update(Request $request)
     {
+        $request->validate([
+            'doctor' => 'string|max:255',
+            'workingDays' => 'array',
+            'workingDays.*.enabled' => 'required|boolean',
+            'workingDays.*.start_time' => 'nullable|date_format:H:i',
+            'workingDays.*.end_time' => 'nullable|date_format:H:i',
+        ]);
+
         $doctor = Doctor::find($request->id);
         $doctor->name = $request->doctor;
         $doctor->working_days = json_encode($request->workingDays);
@@ -68,6 +76,15 @@ class MedicController extends Controller
 
     public function consultStore(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
+            'doctor' => 'required|exists:doctors,id',
+            'consult' => 'required|exists:consults,id',
+            'date' => 'required',
+            'time' => 'required',
+        ]);
+
         $user = new User();
 
         $user->name = $request->name;

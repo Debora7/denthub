@@ -30,6 +30,11 @@ class AppointmentController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'date' => 'required',
+            'time' => 'required',
+        ]);
+
         $user_id = Auth::id();
         $existingAppointments = Appointment::where('consult_id', $request->consult_id)->get();
 
@@ -63,7 +68,7 @@ class AppointmentController extends Controller
             ->with(['consult', 'user'])
             ->orderBy('appointment_date')
             ->get();
-        $doctos = Doctor::with('consults')->get();
+        $doctos = Doctor::with('consults')->where('user_id', $userId)->get();
         $allAppointments = Appointment::all();
 
         return Inertia::render('Consult/Medic/AllAppointmentsMedic', ['appointments' => $appointments, 'doctors' => $doctos, 'allAppointments' => $allAppointments]);

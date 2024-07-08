@@ -20,7 +20,7 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     $user = auth()->user();
     $counties = County::with('cities')->get();
-    $doctors = Doctor::all();
+    $doctors = Doctor::where('user_id', $user->id)->get();
 
     return Inertia::render('Dashboard', [
         'consults' => Consult::with('city', 'county', 'user', 'reviews')

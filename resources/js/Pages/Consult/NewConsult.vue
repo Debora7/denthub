@@ -59,9 +59,12 @@ const addService = () => {
 
 const submit = () => {
     form.post(route("consult.store"), {
-        onFinish: () => {
+        onSuccess: () => {
             form.reset();
             showNotification("Serviciile au fost salvate");
+        },
+        onError: () => {
+            showNotification("Rezolvă problemele înainte de a salva.", "error");
         },
     });
 };
@@ -89,7 +92,6 @@ const showNotification = (message, type = "success") => {
                                     id="doctor"
                                     class="mt-1 block w-full"
                                     v-model="form.doctor"
-                                    required
                                     style="
                                         border-radius: 5px;
                                         border-color: lightgray;
@@ -128,7 +130,6 @@ const showNotification = (message, type = "success") => {
                                             type="text"
                                             class="mt-1 block w-full"
                                             v-model="service.service"
-                                            required
                                         />
                                         <InputError
                                             class="mt-2"
@@ -152,7 +153,6 @@ const showNotification = (message, type = "success") => {
                                             step="0.10"
                                             class="mt-1 block w-full"
                                             v-model="service.price"
-                                            required
                                         />
                                         <InputError
                                             class="mt-2"
@@ -174,7 +174,6 @@ const showNotification = (message, type = "success") => {
                                             :id="`time-${index}`"
                                             class="mt-1 block w-full"
                                             v-model="service.time"
-                                            required
                                             style="
                                                 border-radius: 5px;
                                                 border-color: lightgray;
@@ -211,7 +210,6 @@ const showNotification = (message, type = "success") => {
                                         type="textarea"
                                         class="mt-1 block w-full"
                                         v-model="service.description"
-                                        required
                                     />
                                     <InputError
                                         class="mt-2"
@@ -250,7 +248,6 @@ const showNotification = (message, type = "success") => {
                                     type="text"
                                     class="mt-1 block w-full"
                                     v-model="form.address"
-                                    required
                                 />
 
                                 <InputError
@@ -271,7 +268,6 @@ const showNotification = (message, type = "success") => {
                                         id="county"
                                         class="mt-1 block w-full"
                                         v-model="form.county"
-                                        required
                                         style="
                                             border-radius: 5px;
                                             border-color: lightgray;
@@ -304,7 +300,6 @@ const showNotification = (message, type = "success") => {
                                         id="city"
                                         class="mt-1 block w-full"
                                         v-model="form.city"
-                                        required
                                         style="
                                             border-radius: 5px;
                                             border-color: lightgray;

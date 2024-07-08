@@ -299,15 +299,19 @@ const openNewAppointmentModal = () => {
 const closeModalNewAppointment = () => {
     modalNewAppointment.value = false;
     form.reset();
+    form.errors = {};
     timeSlots.value = [];
 };
 
 const submit = () => {
     form.post(route("consult.medic.consult.store"), {
-        onFinish: () => {
+        onSuccess: () => {
             modalNewAppointment.value = false;
             form.reset();
             showNotification("Programarea a fost salvată");
+        },
+        onError: () => {
+            showNotification("Rezolvă problemele înainte de a salva.", "error");
         },
     });
 };
@@ -595,7 +599,6 @@ const submit = () => {
                             type="text"
                             class="mt-1 block w-full"
                             v-model="form.name"
-                            required
                             autofocus
                             autocomplete="name"
                         />
@@ -613,7 +616,6 @@ const submit = () => {
                             type="email"
                             class="mt-1 block w-full"
                             v-model="form.email"
-                            required
                             autocomplete="username"
                         />
                         <InputError class="mt-2" :message="form.errors.email" />
@@ -646,7 +648,6 @@ const submit = () => {
                             id="doctor"
                             class="mt-1 block w-full"
                             v-model="form.doctor"
-                            required
                             style="border-radius: 5px; border-color: lightgray"
                         >
                             <option value="">Selectează medicul</option>
@@ -674,7 +675,6 @@ const submit = () => {
                             id="consult"
                             class="mt-1 block w-full"
                             v-model="form.consult"
-                            required
                             style="border-radius: 5px; border-color: lightgray"
                         >
                             <option value="">Selectează serviciul</option>
@@ -686,7 +686,10 @@ const submit = () => {
                                 {{ consult.service }}
                             </option>
                         </select>
-                        <InputError class="mt-2" :message="form.errors.city" />
+                        <InputError
+                            class="mt-2"
+                            :message="form.errors.consult"
+                        />
                     </div>
 
                     <div v-if="form.consult" class="mt-4">
@@ -703,6 +706,7 @@ const submit = () => {
                             :max="maxDate"
                             class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                         />
+                        <InputError class="mt-2" :message="form.errors.date" />
                         <p v-if="!isWorkingDay(form.date)" class="text-danger">
                             Medicul nu are program în această zi.
                         </p>
@@ -729,6 +733,7 @@ const submit = () => {
                                 {{ slot }}
                             </span>
                         </div>
+                        <InputError class="mt-2" :message="form.errors.time" />
                     </div>
 
                     <div class="flex items-center justify-end mt-4">

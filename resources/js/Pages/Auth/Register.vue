@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -16,7 +16,15 @@ const form = useForm({
     password_confirmation: "",
     cui: "",
     phone: "",
+    tab: "client",
 });
+
+watch(
+    () => selectedTab.value,
+    (tab) => {
+        form.tab = tab;
+    }
+);
 
 const submit = () => {
     form.post(route("store"), {
@@ -31,6 +39,8 @@ const submit = () => {
 };
 
 const switchTab = (tab) => {
+    form.reset();
+    form.errors = {};
     selectedTab.value = tab;
 };
 </script>
@@ -67,7 +77,6 @@ const switchTab = (tab) => {
                         type="text"
                         class="mt-1 block w-full"
                         v-model="form.name"
-                        required
                         autofocus
                         autocomplete="name"
                     />
@@ -81,7 +90,6 @@ const switchTab = (tab) => {
                         type="email"
                         class="mt-1 block w-full"
                         v-model="form.email"
-                        required
                         autocomplete="username"
                     />
                     <InputError class="mt-2" :message="form.errors.email" />
@@ -113,7 +121,6 @@ const switchTab = (tab) => {
                         type="password"
                         class="mt-1 block w-full"
                         v-model="form.password"
-                        required
                         autocomplete="new-password"
                     />
                     <InputError class="mt-2" :message="form.errors.password" />
@@ -130,7 +137,6 @@ const switchTab = (tab) => {
                         type="password"
                         class="mt-1 block w-full"
                         v-model="form.password_confirmation"
-                        required
                         autocomplete="new-password"
                     />
                     <InputError
@@ -152,7 +158,6 @@ const switchTab = (tab) => {
                         type="text"
                         class="mt-1 block w-full"
                         v-model="form.name"
-                        required
                         autofocus
                         autocomplete="name"
                     />
@@ -166,7 +171,6 @@ const switchTab = (tab) => {
                         type="text"
                         class="mt-1 block w-full"
                         v-model="form.cui"
-                        required
                         autofocus
                         autocomplete="cui"
                     />
@@ -180,7 +184,6 @@ const switchTab = (tab) => {
                         type="email"
                         class="mt-1 block w-full"
                         v-model="form.email"
-                        required
                         autocomplete="username"
                     />
                     <InputError class="mt-2" :message="form.errors.email" />
@@ -212,7 +215,6 @@ const switchTab = (tab) => {
                         type="password"
                         class="mt-1 block w-full"
                         v-model="form.password"
-                        required
                         autocomplete="new-password"
                     />
                     <InputError class="mt-2" :message="form.errors.password" />
@@ -229,7 +231,6 @@ const switchTab = (tab) => {
                         type="password"
                         class="mt-1 block w-full"
                         v-model="form.password_confirmation"
-                        required
                         autocomplete="new-password"
                     />
                     <InputError

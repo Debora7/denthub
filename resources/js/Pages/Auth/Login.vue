@@ -46,7 +46,6 @@ const submit = () => {
                     type="email"
                     class="mt-1 block w-full"
                     v-model="form.email"
-                    required
                     autofocus
                     autocomplete="username"
                 />
@@ -62,9 +61,10 @@ const submit = () => {
                     type="password"
                     class="mt-1 block w-full"
                     v-model="form.password"
-                    required
                     autocomplete="current-password"
                 />
+
+                <InputError class="mt-2" :message="form.errors.password" />
 
                 <Link
                     :href="route('password.request')"
@@ -73,8 +73,6 @@ const submit = () => {
                 >
                     Ai uitat parola?
                 </Link>
-
-                <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="block mt-4">

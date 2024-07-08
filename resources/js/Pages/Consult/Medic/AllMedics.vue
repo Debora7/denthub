@@ -89,10 +89,13 @@ const submit = () => {
         data: {
             ...form,
         },
-        onFinish: () => {
+        onSuccess: () => {
             form.reset();
             modalEditDoctor.value = false;
             showNotification("Medicul a fost salvat");
+        },
+        onError: () => {
+            showNotification("Rezolvă problemele înainte de a salva.", "error");
         },
     });
 };
@@ -302,7 +305,6 @@ const deleteMedic = () => {
                             type="text"
                             class="mt-1 block w-full"
                             v-model="form.doctor"
-                            required
                             autofocus
                         />
                         <InputError
@@ -345,13 +347,11 @@ const deleteMedic = () => {
                                     type="time"
                                     v-model="form.workingDays[day].start_time"
                                     class="form-input block w-full sm:text-sm border-gray-300 rounded-md"
-                                    required
                                 />
                                 <input
                                     type="time"
                                     v-model="form.workingDays[day].end_time"
                                     class="form-input block w-full sm:text-sm border-gray-300 rounded-md"
-                                    required
                                 />
                             </div>
                         </div>
