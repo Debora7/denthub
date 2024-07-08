@@ -147,7 +147,9 @@ const timeSlots = ref([]);
 
 const minDate = computed(() => {
     const today = new Date();
-    return today.toISOString().split("T")[0];
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    return tomorrow.toISOString().split("T")[0];
 });
 
 const maxDate = computed(() => {
@@ -446,7 +448,7 @@ const showNotification = (message, type = "success") => {
                                     </p>
                                 </div>
                                 <div
-                                    class="col-md-4 d-flex flex-column justify-content-between"
+                                    class="col-md-4 d-flex flex-column justify-content-between mt-4 md:mt-0"
                                     style="text-align: left"
                                 >
                                     <div @click="openReviewModal(consult)">
