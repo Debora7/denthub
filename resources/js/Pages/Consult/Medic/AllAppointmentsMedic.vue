@@ -22,6 +22,7 @@ const form = useForm({
     phone: "",
     doctor: "",
     consult: "",
+    date: "",
 });
 
 const consults = ref([]);
@@ -37,6 +38,38 @@ watch(
         updateCities(newDoctor);
     }
 );
+
+const minDate = computed(() => {
+    const today = new Date();
+    return today.toISOString().split("T")[0];
+});
+
+const maxDate = computed(() => {
+    const nextYear = new Date();
+    nextYear.setFullYear(nextYear.getFullYear() + 1);
+    return nextYear.toISOString().split("T")[0];
+});
+
+const isWorkingDay = (dateString) => {
+    if (!dateString) return true;
+
+    const date = new Date(dateString);
+
+    const dayOfWeek = date.toLocaleDateString("ro-RO", { weekday: "long" });
+    const dayKey = dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1);
+
+    const doctorId = form.doctor;
+    const doctor = props.doctors.find((doc) => doc.id === doctorId);
+
+    if (!doctor) {
+        console.error("Doctor not found");
+        return false;
+    }
+
+    const workingDays = doctor.working_days;
+
+    return JSON.parse(workingDays)[dayKey]?.enabled || false;
+};
 
 const modalNewAppointment = ref(false);
 
@@ -498,6 +531,27 @@ const submit = () => {};
                             </option>
                         </select>
                         <InputError class="mt-2" :message="form.errors.city" />
+                    </div>
+
+                    <div class="mt-4">
+                        <label
+                            for="appointmentDate"
+                            class="block text-sm font-medium text-gray-700"
+                        >
+                            Selectează data programării:
+                            <span style="color: red">*</span>
+                        </label>
+                        <input
+                            type="date"
+                            id="appointmentDate"
+                            v-model="form.date"
+                            :min="minDate"
+                            :max="maxDate"
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                        />
+                        <p v-if="!isWorkingDay(form.date)" class="text-danger">
+                            Medicul nu are program în această zi.
+                        </p>
                     </div>
                 </form>
             </div>
