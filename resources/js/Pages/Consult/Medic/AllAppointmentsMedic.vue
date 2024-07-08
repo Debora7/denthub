@@ -339,24 +339,26 @@ const submit = () => {
                             placeholder="Caută după numele pacientului"
                         />
                     </div>
-                    <div class="input-group mb-3">
-                        <span
-                            class="input-group-text"
-                            style="background-color: white"
-                            >Data</span
-                        >
-                        <input
-                            type="date"
-                            v-model="filterDate"
-                            class="form-control"
-                        />
-                        <PrimaryButton
-                            class="ms-2"
-                            style="border-radius: 7px"
-                            @click="openNewAppointmentModal"
-                        >
-                            Adaugă o programare
-                        </PrimaryButton>
+                    <div class="d-flex justify-content-between mb-3">
+                        <div class="input-group">
+                            <span
+                                class="input-group-text"
+                                style="background-color: white"
+                                >Data</span
+                            >
+                            <input
+                                type="date"
+                                v-model="filterDate"
+                                class="form-control"
+                            />
+                            <PrimaryButton
+                                class="ms-2"
+                                style="border-radius: 7px"
+                                @click="openNewAppointmentModal"
+                            >
+                                Adaugă o programare
+                            </PrimaryButton>
+                        </div>
                     </div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
