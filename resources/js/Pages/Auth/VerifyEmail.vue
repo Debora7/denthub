@@ -1,8 +1,8 @@
 <script setup>
-import { computed } from 'vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { computed } from "vue";
+import GuestLayout from "@/Layouts/GuestLayout.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 
 const props = defineProps({
     status: {
@@ -13,10 +13,12 @@ const props = defineProps({
 const form = useForm({});
 
 const submit = () => {
-    form.post(route('verification.send'));
+    form.post(route("verification.send"));
 };
 
-const verificationLinkSent = computed(() => props.status === 'verification-link-sent');
+const verificationLinkSent = computed(
+    () => props.status === "verification-link-sent"
+);
 </script>
 
 <template>
@@ -24,18 +26,27 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
         <Head title="Email Verification" />
 
         <div class="mb-4 text-sm text-gray-600">
-            Thanks for signing up! Before getting started, could you verify your email address by clicking on the link
-            we just emailed to you? If you didn't receive the email, we will gladly send you another.
+            Mulțumim că te-ai înregistrat! Înainte de a începe, te rugăm să-ți
+            verifici adresa de email făcând clic pe linkul pe care ți l-am
+            trimis. Dacă nu ai primit emailul, îți vom trimite cu plăcere un
+            altul.
         </div>
 
-        <div class="mb-4 font-medium text-sm text-green-600" v-if="verificationLinkSent">
-            A new verification link has been sent to the email address you provided during registration.
+        <div
+            class="mb-4 font-medium text-sm text-green-600"
+            v-if="verificationLinkSent"
+        >
+            Un nou link de verificare a fost trimis la adresa de email pe care
+            ai furnizat-o în timpul înregistrării.
         </div>
 
         <form @submit.prevent="submit">
             <div class="mt-4 flex items-center justify-between">
-                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Resend Verification Email
+                <PrimaryButton
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                >
+                    Retrimite emailul de verificare
                 </PrimaryButton>
 
                 <Link

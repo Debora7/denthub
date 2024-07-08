@@ -29,13 +29,15 @@ Route::get('/dashboard', function () {
         'counties' => $counties,
         'doctors' => $doctors,
     ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware('auth')->name('dashboard');
+// ->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/welcome', function () {
     return Inertia::render('Welcome');
 })->middleware(['auth', 'verified'])->name('welcome');
 
 Route::middleware('auth')->group(function () {
+    // Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -54,8 +56,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/allMedics', [MedicController::class, 'allMedics'])->name('allMedics');
             Route::delete('/delete', [MedicController::class, 'destroy'])->name('destroy');
             Route::get('/appointment-index', [AppointmentController::class, 'appointmentIndex'])->name('appointment.index');
-            Route::post('/honored/{id}', [AppointmentController::class, 'honored'])->name('honored');
-            Route::post('/missed/{id}', [AppointmentController::class, 'missed'])->name('missed');
+            Route::post('/honored', [AppointmentController::class, 'honored'])->name('honored');
+            Route::post('/missed', [AppointmentController::class, 'missed'])->name('missed');
         });
 
         Route::prefix('client')->name('client.')->group(function () {

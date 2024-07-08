@@ -2,7 +2,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { ref, defineProps, computed, watch } from "vue";
-import axios from "axios";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -16,6 +15,10 @@ const props = defineProps({
     appointments: Array,
     allAppointments: Array,
     doctors: Array,
+});
+
+const formForActions = useForm({
+    id: 0,
 });
 
 const form = useForm({
@@ -268,14 +271,12 @@ const changeItemsPerPage = (event) => {
 };
 
 const appointmentHonored = (id) => {
-    axios
-        .post(`/consult/medic/honored/${id}`)
-        .then((response) => {
+    formForActions.id = id;
+    formForActions.post(route("consult.medic.honored"), {
+        onFinish: () => {
             showNotification("Programarea a fost marcată ca fiind onorată");
-        })
-        .catch((error) => {
-            showNotification("A apătur o eroare", "error");
-        });
+        },
+    });
 };
 
 const showNotification = (message, type = "success") => {
@@ -283,14 +284,12 @@ const showNotification = (message, type = "success") => {
 };
 
 const appointmentMissed = (id) => {
-    axios
-        .post(`/consult/medic/missed/${id}`)
-        .then((response) => {
+    formForActions.id = id;
+    formForActions.post(route("consult.medic.missed"), {
+        onFinish: () => {
             showNotification("Programarea a fost marcată ca fiind anulată");
-        })
-        .catch((error) => {
-            showNotification("A apărut o eroare", "error");
-        });
+        },
+    });
 };
 
 const openNewAppointmentModal = () => {
@@ -629,6 +628,9 @@ const submit = () => {
                                 class="mt-1 block w-full"
                                 v-model="form.phone"
                                 maxlength="10"
+                                @input="
+                                    form.phone = form.phone.replace(/\D/g, '')
+                                "
                             />
                         </div>
                         <InputError class="mt-2" :message="form.errors.phone" />

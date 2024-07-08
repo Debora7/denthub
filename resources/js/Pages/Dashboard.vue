@@ -20,7 +20,18 @@ const props = defineProps({
     counties: Array,
     doctors: Array,
 });
-console.log(props.reviews);
+
+const form = useForm({
+    id: 0,
+    doctor: "",
+    address: "",
+    city: "",
+    county: "",
+    service: "",
+    price: 0.0,
+    description: "",
+    time: "",
+});
 
 const reviews_mapped = ref([]);
 
@@ -30,7 +41,7 @@ const deleteConsultModal = (consult) => {
     form.city = consult.city.name;
     form.county = consult.county.name;
     form.service = consult.service;
-    form.price = Number(parseFloat(consult.price).toFixed(2));
+    form.price = parseFloat(consult.price);
     form.description = consult.description;
     form.id = consult.id;
     form.time = consult.consult_time.split(":")[1];
@@ -78,7 +89,7 @@ const editConsult = (consult) => {
     form.city = consult.city_id;
     form.county = consult.county_id;
     form.service = consult.service;
-    form.price = Number(parseFloat(consult.price).toFixed(2));
+    form.price = parseFloat(consult.price);
     form.description = consult.description;
     form.time = consult.consult_time.split(":")[1];
     form.id = consult.id;
@@ -97,18 +108,6 @@ const closeModalDelete = () => {
 const closeModalReview = () => {
     modalReview.value = false;
 };
-
-const form = useForm({
-    id: 0,
-    doctor: "",
-    address: "",
-    city: "",
-    county: "",
-    service: "",
-    price: 0.0,
-    description: "",
-    time: "",
-});
 
 const cities = ref([]);
 

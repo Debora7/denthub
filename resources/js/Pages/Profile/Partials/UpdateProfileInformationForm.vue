@@ -78,6 +78,7 @@ const form = useForm({
                         class="mt-1 block w-full"
                         v-model="form.phone"
                         maxlength="10"
+                        @input="form.phone = form.phone.replace(/\D/g, '')"
                     />
                 </div>
                 <InputError class="mt-2" :message="form.errors.phone" />
@@ -99,7 +100,7 @@ const form = useForm({
 
             <div v-if="mustVerifyEmail && user.email_verified_at === null">
                 <p class="text-sm mt-2 text-gray-800">
-                    Adresa ta de email nu este verificată
+                    Adresa ta de email nu este verificată.
                     <Link
                         :href="route('verification.send')"
                         method="post"
