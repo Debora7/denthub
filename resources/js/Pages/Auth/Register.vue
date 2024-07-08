@@ -7,7 +7,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 
-const selectedTab = ref("client"); // Track the selected tab
+const selectedTab = ref("client");
 
 const form = useForm({
     name: "",
