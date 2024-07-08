@@ -54,8 +54,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/allMedics', [MedicController::class, 'allMedics'])->name('allMedics');
             Route::delete('/delete', [MedicController::class, 'destroy'])->name('destroy');
             Route::get('/appointment-index', [AppointmentController::class, 'appointmentIndex'])->name('appointment.index');
-            Route::post('/honored/{id}', [AppointmentController::class, 'honored'])->name('honored');
-            Route::post('/missed/{id}', [AppointmentController::class, 'missed'])->name('missed');
+            Route::post('/honored', [AppointmentController::class, 'honored'])->name('honored');
+            Route::post('/missed', [AppointmentController::class, 'missed'])->name('missed');
         });
 
         Route::prefix('client')->name('client.')->group(function () {
