@@ -37,9 +37,12 @@ const daysOfWeek = [
 
 const submit = () => {
     form.post(route("consult.medic.store"), {
-        onFinish: () => {
+        onSuccess: () => {
             form.reset();
             showNotification("Medicul a fost salvat");
+        },
+        onError: () => {
+            showNotification("Rezolvă problemele înainte de a salva.", "error");
         },
     });
 };
@@ -69,7 +72,6 @@ const showNotification = (message, type = "success") => {
                                     type="text"
                                     class="mt-1 block w-full"
                                     v-model="form.doctor"
-                                    required
                                     autofocus
                                 />
                                 <InputError
@@ -114,7 +116,6 @@ const showNotification = (message, type = "success") => {
                                                 form.workingDays[day].start_time
                                             "
                                             class="form-input block w-full sm:text-sm border-gray-300 rounded-md"
-                                            required
                                         />
                                         <input
                                             type="time"
@@ -122,7 +123,6 @@ const showNotification = (message, type = "success") => {
                                                 form.workingDays[day].end_time
                                             "
                                             class="form-input block w-full sm:text-sm border-gray-300 rounded-md"
-                                            required
                                         />
                                     </div>
                                 </div>

@@ -74,14 +74,14 @@ class ConsultController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'doctor' => 'required|integer|exists:doctors,id',
-            'address' => 'required|string|max:255',
-            'city' => 'required|integer|exists:cities,id',
-            'county' => 'required|integer|exists:counties,id',
-            'service' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-            'time' => 'required|integer|min:1|max:60',
+            'doctor' => 'integer|exists:doctors,id',
+            'address' => 'string|max:255',
+            'city' => 'integer|exists:cities,id',
+            'county' => 'integer|exists:counties,id',
+            'service' => 'string|max:255',
+            'description' => 'string',
+            'price' => 'numeric',
+            'time' => 'integer|min:1|max:60',
         ]);
 
         $user = auth()->user();

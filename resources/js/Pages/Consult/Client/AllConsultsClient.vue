@@ -10,6 +10,7 @@ import "toastr/build/toastr.min.css";
 import ModalReview from "@/Components/ModalReview.vue";
 import Rating from "primevue/rating";
 import InputLabel from "@/Components/InputLabel.vue";
+import InputError from "@/Components/InputError.vue";
 
 const props = defineProps({
     consults: Array,
@@ -303,15 +304,19 @@ const selectSlot = (slot) => {
 const closeModal = () => {
     modalAppointment.value = false;
     appointmentDetails.reset();
+    appointmentDetails.errors = {};
     timeSlots.value = [];
 };
 
 const submit = () => {
     appointmentDetails.post(route("consult.client.appointment.store"), {
-        onFinish: () => {
+        onSuccess: () => {
             modalAppointment.value = false;
             appointmentDetails.reset();
             showNotification("Programarea a fost salvată");
+        },
+        onError: () => {
+            showNotification("Rezolvă problemele înainte de a salva.", "error");
         },
     });
 };
@@ -602,6 +607,10 @@ const showNotification = (message, type = "success") => {
                             :max="maxDate"
                             class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                         />
+                        <InputError
+                            class="mt-2"
+                            :message="appointmentDetails.errors.date"
+                        />
                         <p
                             v-if="!isWorkingDay(appointmentDetails.date)"
                             class="text-danger"
@@ -634,6 +643,10 @@ const showNotification = (message, type = "success") => {
                                 {{ slot }}
                             </span>
                         </div>
+                        <InputError
+                            class="mt-2"
+                            :message="appointmentDetails.errors.time"
+                        />
                     </div>
 
                     <div class="flex items-center justify-end mt-4">

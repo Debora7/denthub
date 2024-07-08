@@ -35,8 +35,9 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'cui' => 'nullable|string|max:255',
+            'cui' => $request->tab === 'client' ? 'nullable|string|max:255' : 'required|string|max:255',
         ]);
+
 
         $userData = [
             'name' => $request->name,

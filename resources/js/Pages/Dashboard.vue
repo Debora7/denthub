@@ -129,10 +129,13 @@ const submit = () => {
         data: {
             ...form,
         },
-        onFinish: () => {
+        onSuccess: () => {
             form.reset();
             modalEditConsult.value = false;
             showNotification("Serviciul a fost editat");
+        },
+        onError: () => {
+            showNotification("Rezolvă problemele înainte de a salva.", "error");
         },
     });
 };
@@ -393,7 +396,6 @@ const deleteConsult = () => {
                             id="doctor"
                             class="mt-1 block w-full"
                             v-model="form.doctor"
-                            required
                             style="border-radius: 5px; border-color: lightgray"
                         >
                             <option value="">Selectează medicul</option>
@@ -424,7 +426,6 @@ const deleteConsult = () => {
                                     type="text"
                                     class="mt-1 block w-full"
                                     v-model="form.service"
-                                    required
                                 />
                                 <InputError
                                     class="mt-2"
@@ -440,7 +441,6 @@ const deleteConsult = () => {
                                     step="0.10"
                                     class="mt-1 block w-full"
                                     v-model="form.price"
-                                    required
                                 />
                                 <InputError
                                     class="mt-2"
@@ -455,7 +455,6 @@ const deleteConsult = () => {
                                     id="time"
                                     class="mt-1 block w-full"
                                     v-model="form.time"
-                                    required
                                     style="
                                         border-radius: 5px;
                                         border-color: lightgray;
@@ -488,7 +487,6 @@ const deleteConsult = () => {
                                 type="textarea"
                                 class="mt-1 block w-full"
                                 v-model="form.description"
-                                required
                             />
                             <InputError
                                 class="mt-2"
@@ -505,7 +503,6 @@ const deleteConsult = () => {
                             type="text"
                             class="mt-1 block w-full"
                             v-model="form.address"
-                            required
                         />
                         <InputError
                             class="mt-2"
@@ -521,7 +518,6 @@ const deleteConsult = () => {
                                 id="county"
                                 class="mt-1 block w-full"
                                 v-model="form.county"
-                                required
                                 style="
                                     border-radius: 5px;
                                     border-color: lightgray;
@@ -548,7 +544,6 @@ const deleteConsult = () => {
                                 id="city"
                                 class="mt-1 block w-full"
                                 v-model="form.city"
-                                required
                                 style="
                                     border-radius: 5px;
                                     border-color: lightgray;
