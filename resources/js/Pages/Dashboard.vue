@@ -44,7 +44,7 @@ const deleteConsultModal = (consult) => {
     form.price = parseFloat(consult.price);
     form.description = consult.description;
     form.id = consult.id;
-    form.time = consult.consult_time.split(":")[1];
+    form.time = parseInt(consult.consult_time.split(":")[1], 10);
 
     modalDeleteConsult.value = true;
 };
@@ -91,7 +91,8 @@ const editConsult = (consult) => {
     form.service = consult.service;
     form.price = parseFloat(consult.price);
     form.description = consult.description;
-    form.time = consult.consult_time.split(":")[1];
+    form.time = parseInt(consult.consult_time.split(":")[1], 10);
+
     form.id = consult.id;
 
     modalEditConsult.value = true;
