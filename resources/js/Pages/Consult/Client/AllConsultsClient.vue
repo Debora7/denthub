@@ -593,6 +593,7 @@ const showNotification = (message, type = "success") => {
                             class="block text-sm font-medium text-gray-700"
                         >
                             Selectează data programării:
+                            <span style="color: red">*</span>
                         </label>
                         <input
                             type="date"
@@ -615,7 +616,8 @@ const showNotification = (message, type = "success") => {
                         class="mt-2"
                     >
                         <label class="block text-sm font-medium text-gray-700"
-                            >Selectează Ora:</label
+                            >Selectează Ora:
+                            <span style="color: red">*</span></label
                         >
                         <div class="mt-2">
                             <span

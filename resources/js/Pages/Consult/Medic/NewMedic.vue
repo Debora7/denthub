@@ -62,6 +62,7 @@ const showNotification = (message, type = "success") => {
                                 <InputLabel
                                     for="doctor"
                                     value="Nume și prenume"
+                                    :required="true"
                                 />
                                 <TextInput
                                     id="doctor"

@@ -4,7 +4,7 @@
             src="/favicon.ico"
             alt="Logo"
             class="logo"
-            style="width: 100px; height: 100px"
+            style="width: 60px; height: 60px"
         />
         <span class="logo-text">DentHub</span>
     </div>
