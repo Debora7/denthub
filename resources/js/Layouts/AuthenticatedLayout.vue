@@ -296,12 +296,12 @@ const userRole = props.auth.user.cui;
                             <ul class="mt-2 text-gray-600 list-none pl-0">
                                 <li>
                                     <a
-                                        href="https://mail.google.com/mail/?view=cm&fs=1&to=denthub@proton.me"
+                                        href="https://mail.google.com/mail/?view=cm&fs=1&to=denthub.contact@yahoo.com"
                                         class="flex items-center text-gray-600 hover:text-gray-900"
                                         style="text-decoration: none"
                                     >
                                         <i class="fas fa-envelope mr-2"></i>
-                                        denthub@proton.me
+                                        denthub.contact@yahoo.com
                                     </a>
                                 </li>
                             </ul>
