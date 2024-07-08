@@ -23,28 +23,15 @@ const userRole = props.auth.user.cui;
                     <div class="flex justify-between h-16">
                         <div class="flex">
                             <!-- Logo -->
-                            <div
-                                class="shrink-0 flex items-center"
-                                v-if="userRole !== null"
-                            >
+                            <div class="shrink-0 flex items-center">
                                 <Link
                                     :href="
-                                        route('consult.medic.appointment.index')
+                                        userRole !== null
+                                            ? route(
+                                                  'consult.medic.appointment.index'
+                                              )
+                                            : route('consult.client.index')
                                     "
-                                    style="text-decoration: none"
-                                >
-                                    <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800"
-                                    />
-                                </Link>
-                            </div>
-
-                            <div
-                                class="shrink-0 flex items-center"
-                                v-if="userRole === null"
-                            >
-                                <Link
-                                    :href="route('consult.client.index')"
                                     style="text-decoration: none"
                                 >
                                     <ApplicationLogo
@@ -56,9 +43,9 @@ const userRole = props.auth.user.cui;
                             <!-- Navigation Links -->
                             <div
                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
-                                v-if="userRole !== null"
                             >
                                 <NavLink
+                                    v-if="userRole !== null"
                                     :href="
                                         route('consult.medic.appointment.index')
                                     "
@@ -71,18 +58,21 @@ const userRole = props.auth.user.cui;
                                     Programări
                                 </NavLink>
                                 <NavLink
+                                    v-if="userRole !== null"
                                     :href="route('dashboard')"
                                     :active="route().current('dashboard')"
                                 >
                                     Servicii
                                 </NavLink>
                                 <NavLink
+                                    v-if="userRole !== null"
                                     :href="route('consult.index')"
                                     :active="route().current('consult.index')"
                                 >
                                     Serviciu nou
                                 </NavLink>
                                 <NavLink
+                                    v-if="userRole !== null"
                                     :href="route('consult.medic.allMedics')"
                                     :active="
                                         route().current(
@@ -93,6 +83,7 @@ const userRole = props.auth.user.cui;
                                     Medici
                                 </NavLink>
                                 <NavLink
+                                    v-if="userRole !== null"
                                     :href="route('consult.medic.index')"
                                     :active="
                                         route().current('consult.medic.index')
@@ -100,13 +91,8 @@ const userRole = props.auth.user.cui;
                                 >
                                     Medic nou
                                 </NavLink>
-                            </div>
-
-                            <div
-                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
-                                v-if="userRole === null"
-                            >
                                 <NavLink
+                                    v-if="userRole === null"
                                     :href="route('consult.client.index')"
                                     :active="
                                         route().current('consult.client.index')
@@ -115,6 +101,7 @@ const userRole = props.auth.user.cui;
                                     Servicii
                                 </NavLink>
                                 <NavLink
+                                    v-if="userRole === null"
                                     :href="
                                         route(
                                             'consult.client.appointment.index'
@@ -131,8 +118,8 @@ const userRole = props.auth.user.cui;
                             </div>
                         </div>
 
+                        <!-- Settings Dropdown -->
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
-                            <!-- Settings Dropdown -->
                             <div class="ms-3 relative">
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
@@ -142,7 +129,6 @@ const userRole = props.auth.user.cui;
                                                 class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                             >
                                                 {{ props.auth.user.name }}
-
                                                 <svg
                                                     class="ms-2 -me-0.5 h-4 w-4"
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -158,7 +144,6 @@ const userRole = props.auth.user.cui;
                                             </button>
                                         </span>
                                     </template>
-
                                     <template #content>
                                         <DropdownLink
                                             :href="route('profile.edit')"
@@ -230,10 +215,38 @@ const userRole = props.auth.user.cui;
                 >
                     <div class="pt-2 pb-3 space-y-1" v-if="userRole !== null">
                         <ResponsiveNavLink
+                            :href="route('consult.medic.appointment.index')"
+                            :active="
+                                route().current(
+                                    'consult.medic.appointment.index'
+                                )
+                            "
+                        >
+                            Programări
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
                             :href="route('dashboard')"
                             :active="route().current('dashboard')"
                         >
-                            Dashboard
+                            Servicii
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('consult.index')"
+                            :active="route().current('consult.index')"
+                        >
+                            Serviciu nou
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('consult.medic.allMedics')"
+                            :active="route().current('consult.medic.allMedics')"
+                        >
+                            Medici
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('consult.medic.index')"
+                            :active="route().current('consult.medic.index')"
+                        >
+                            Medic nou
                         </ResponsiveNavLink>
                     </div>
 
@@ -242,7 +255,17 @@ const userRole = props.auth.user.cui;
                             :href="route('consult.client.index')"
                             :active="route().current('consult.client.index')"
                         >
-                            Dashboard
+                            Servicii
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('consult.client.appointment.index')"
+                            :active="
+                                route().current(
+                                    'consult.client.appointment.index'
+                                )
+                            "
+                        >
+                            Programări
                         </ResponsiveNavLink>
                     </div>
 
