@@ -4,6 +4,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build"
+        "vercel-build": "composer install && npm run build"
     },
     "devDependencies": {
         "@inertiajs/vue3": "^1.0.0",
