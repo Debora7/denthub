@@ -52,7 +52,19 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://test.dentportal.ro'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Asset URL
+    |--------------------------------------------------------------------------
+    |
+    | This URL is used by the Laravel when generating asset URLs. This should
+    | be set to the base URL for your application.
+    |
+    */
+
+    'asset_url' => env('ASSET_URL', 'https://test.dentportal.ro'),
 
     /*
     |--------------------------------------------------------------------------

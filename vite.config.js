@@ -1,11 +1,11 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
-import vue from '@vitejs/plugin-vue';
+import { defineConfig } from "vite";
+import laravel from "laravel-vite-plugin";
+import vue from "@vitejs/plugin-vue";
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: 'resources/js/app.js',
+            input: "resources/js/app.js",
             refresh: true,
         }),
         vue({
@@ -17,4 +17,12 @@ export default defineConfig({
             },
         }),
     ],
+    build: {
+        outDir: "public",
+    },
+    server: {
+        host: 'test.dentportal.ro',
+        port: 5173,
+    },
+    base: 'https://test.dentportal.ro/', // Ensure this is the correct base URL
 });

@@ -18,9 +18,10 @@ class CorsMiddleware
     {
         $allowedOrigins = [
             'http://localhost:5173',
+            'http://localhost:8000',
             'http://127.0.0.1:5173',
             'https://dentportal.ro',
-            'http://dentportal.ro',
+            'https://dentportal.ro',
         ];
 
         $origin = $request->headers->get('Origin');
