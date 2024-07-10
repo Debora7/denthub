@@ -12,6 +12,7 @@
         "laravel/tinker": "^2.9",
         "league/csv": "^9.16",
         "spatie/laravel-permission": "^6.9",
+        "stripe/stripe-php": "^15.1",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {

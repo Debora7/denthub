@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Inertia\Inertia;
 use App\Models\Appointment;
 use App\Models\Doctor;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -61,6 +62,8 @@ class AppointmentController extends Controller
     public function appointmentIndex()
     {
         $userId = auth()->id();
+        $user = User::where('id', $userId)->first();
+
         $appointments = Appointment::whereHas('consult', function ($query) use ($userId) {
             $query->where('user_id', $userId);
         })
@@ -71,7 +74,12 @@ class AppointmentController extends Controller
         $doctos = Doctor::with('consults')->where('user_id', $userId)->get();
         $allAppointments = Appointment::all();
 
-        return Inertia::render('Consult/Medic/AllAppointmentsMedic', ['appointments' => $appointments, 'doctors' => $doctos, 'allAppointments' => $allAppointments]);
+        return Inertia::render('Consult/Medic/AllAppointmentsMedic', [
+            'appointments' => $appointments,
+            'doctors' => $doctos,
+            'allAppointments' => $allAppointments,
+            'user' => $user
+        ]);
     }
 
     public function honored(Request $request)

@@ -8,6 +8,7 @@ use App\Models\Consult;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MedicController;
 use App\Http\Controllers\ConsultController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\AppointmentController;
@@ -36,6 +37,7 @@ Route::get('/welcome', function () {
 })->middleware(['auth', 'verified'])->name('welcome');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/payment', [PaymentController::class, 'payment'])->name('payment');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { ref, defineProps, computed, watch } from "vue";
+import { ref, defineProps, computed, watch, onMounted } from "vue";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -10,12 +10,74 @@ import Modal from "@/Components/Modal.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
+import { loadStripe } from "@stripe/stripe-js";
 
 const props = defineProps({
     appointments: Array,
     allAppointments: Array,
     doctors: Array,
+    user: Array,
 });
+
+const userRole = props.user.cui;
+const userSubscription = props.user.subscription;
+
+const modalSubscription = ref(true);
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+
+const stripe = ref(null);
+const elements = ref(null);
+const cardElement = ref(null);
+
+onMounted(async () => {
+    if (userRole !== null && userSubscription === "Neplătit") {
+        modalSubscription.value = true;
+
+        stripe.value = await stripePromise;
+        elements.value = stripe.value.elements();
+
+        const style = {
+            base: {
+                color: "#32325d",
+                fontSize: "16px",
+                "::placeholder": {
+                    color: "#32325d",
+                },
+            },
+            invalid: {
+                color: "#fa755a",
+                iconColor: "#fa755a",
+            },
+        };
+
+        cardElement.value = elements.value.create("card", { style });
+        cardElement.value.mount("#card-element");
+    } else {
+        modalSubscription.value = false;
+    }
+});
+
+const pay = async () => {
+    const { token, error } = await stripe.value.createToken(cardElement.value);
+
+    if (error) {
+        showNotification("A apărut o eroare", "error");
+    } else {
+        axios
+            .post("/payment", {
+                amount: 5000,
+                token: token.id,
+            })
+            .then((response) => {
+                modalSubscription.value = false;
+                showNotification("Plata a fost efecuată cu succes");
+            })
+            .catch((error) => {
+                showNotification("A apărut o eroare", "error");
+            });
+    }
+};
 
 const formForActions = useForm({
     id: 0,
@@ -752,6 +814,25 @@ const submit = () => {
                         >
                             Închide
                         </SecondaryButton>
+                    </div>
+                </form>
+            </div>
+        </Modal>
+
+        <Modal :show="modalSubscription">
+            <div class="p-6">
+                <h1>Abonament</h1>
+                <p>
+                    Pentru a putea înregistra servicii sau alte activități pe
+                    platforma noastră, este necesar să achitați o taxă unică de
+                    50 lei. Vă rugăm să efectuați plata pentru a beneficia de
+                    toate funcționalitățile disponibile.
+                </p>
+                <form @submit.prevent="pay" class="mt-4">
+                    <div id="card-element"></div>
+
+                    <div class="flex items-center justify-end mt-4">
+                        <PrimaryButton type="submit">Plătește</PrimaryButton>
                     </div>
                 </form>
             </div>
