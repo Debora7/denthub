@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://test.dentportal.ro'),
+    'url' => env('APP_URL', 'https://dentportal.ro'),
 
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'asset_url' => env('ASSET_URL', 'https://test.dentportal.ro'),
+    'asset_url' => env('ASSET_URL', 'https://dentportal.ro'),
 
     /*
     |--------------------------------------------------------------------------
