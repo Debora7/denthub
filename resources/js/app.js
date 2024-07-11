@@ -13,7 +13,7 @@ import { InertiaProgress } from '@inertiajs/progress';
 import "bootstrap/dist/css/bootstrap.min.css"; // Bootstrap CSS
 import "bootstrap/dist/js/bootstrap.bundle.min"; // Bootstrap JS
 
-const appName = import.meta.env.VITE_APP_NAME || "DentHub";
+const appName = import.meta.env.VITE_APP_NAME || "DentPortal";
 
 // Set up Inertia to use Axios for requests
 Inertia.on('before', (event) => {
