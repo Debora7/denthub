@@ -336,7 +336,7 @@ const userRole = props.auth.user.cui;
                             <ul class="mt-2 space-y-2 list-none pl-0">
                                 <li>
                                     <a
-                                        href="#"
+                                        href="https://www.termsandconditionsgenerator.com/live.php?token=7xcMdXEqs0Q9ceK0Grjbk2fGrZwjvkkM"
                                         class="text-gray-600 hover:text-gray-900"
                                         style="text-decoration: none"
                                     >
@@ -345,7 +345,7 @@ const userRole = props.auth.user.cui;
                                 </li>
                                 <li>
                                     <a
-                                        href="#"
+                                        href="https://www.freeprivacypolicy.com/live/50e07187-a51a-4f7e-84e4-e38f5d6faeb4"
                                         class="text-gray-600 hover:text-gray-900"
                                         style="text-decoration: none"
                                     >
