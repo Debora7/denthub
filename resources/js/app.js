@@ -10,7 +10,7 @@ import PrimeVue from "primevue/config";
 import "bootstrap/dist/css/bootstrap.min.css"; // Bootstrap CSS
 import "bootstrap/dist/js/bootstrap.bundle.min"; // Bootstrap JS
 
-const appName = import.meta.env.VITE_APP_NAME || "DentHub";
+const appName = import.meta.env.VITE_APP_NAME || "DentPortal";
 
 createInertiaApp({
     title: (title) => `${appName}`,

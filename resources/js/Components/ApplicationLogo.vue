@@ -6,7 +6,7 @@
             class="logo"
             style="width: 60px; height: 60px"
         />
-        <span class="logo-text">DentHub</span>
+        <span class="logo-text">DentPortal</span>
     </div>
 </template>
 
