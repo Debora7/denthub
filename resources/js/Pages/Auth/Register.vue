@@ -49,215 +49,270 @@ const switchTab = (tab) => {
     <GuestLayout>
         <Head title="Crează un cont nou" />
 
-        <div class="tabs">
-            <button
-                @click="switchTab('client')"
-                :class="{ active: selectedTab === 'client' }"
-            >
-                Persoană fizică
-            </button>
-            <button
-                @click="switchTab('dentist')"
-                :class="{ active: selectedTab === 'dentist' }"
-            >
-                Persoană juridică
-            </button>
-        </div>
-
-        <form @submit.prevent="submit">
-            <template v-if="selectedTab === 'client'">
-                <div>
-                    <InputLabel
-                        for="name"
-                        value="Nume complet"
-                        :required="true"
-                    />
-                    <TextInput
-                        id="name"
-                        type="text"
-                        class="mt-1 block w-full"
-                        v-model="form.name"
-                        autofocus
-                        autocomplete="name"
-                    />
-                    <InputError class="mt-2" :message="form.errors.name" />
-                </div>
-
-                <div class="mt-4">
-                    <InputLabel for="email" value="Email" :required="true" />
-                    <TextInput
-                        id="email"
-                        type="email"
-                        class="mt-1 block w-full"
-                        v-model="form.email"
-                        autocomplete="username"
-                    />
-                    <InputError class="mt-2" :message="form.errors.email" />
-                </div>
-
-                <div class="mt-4">
-                    <InputLabel for="phone" value="Telefon" />
-                    <div class="flex items-center">
-                        <TextInput
-                            id="phone"
-                            type="text"
-                            class="mt-1 block w-full"
-                            v-model="form.phone"
-                            maxlength="10"
-                            @input="form.phone = form.phone.replace(/\D/g, '')"
-                        />
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="mb-4">
+                    <div class="tabs">
+                        <button
+                            @click="switchTab('client')"
+                            :class="{ active: selectedTab === 'client' }"
+                        >
+                            Persoană fizică
+                        </button>
+                        <button
+                            @click="switchTab('dentist')"
+                            :class="{ active: selectedTab === 'dentist' }"
+                        >
+                            Persoană juridică
+                        </button>
                     </div>
-                    <InputError class="mt-2" :message="form.errors.phone" />
+
+                    <form @submit.prevent="submit">
+                        <template v-if="selectedTab === 'client'">
+                            <div>
+                                <InputLabel
+                                    for="name"
+                                    value="Nume complet"
+                                    :required="true"
+                                />
+                                <TextInput
+                                    id="name"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    v-model="form.name"
+                                    autofocus
+                                    autocomplete="name"
+                                />
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.name"
+                                />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel
+                                    for="email"
+                                    value="Email"
+                                    :required="true"
+                                />
+                                <TextInput
+                                    id="email"
+                                    type="email"
+                                    class="mt-1 block w-full"
+                                    v-model="form.email"
+                                    autocomplete="username"
+                                />
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.email"
+                                />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel for="phone" value="Telefon" />
+                                <div class="flex items-center">
+                                    <TextInput
+                                        id="phone"
+                                        type="text"
+                                        class="mt-1 block w-full"
+                                        v-model="form.phone"
+                                        maxlength="10"
+                                        @input="
+                                            form.phone = form.phone.replace(
+                                                /\D/g,
+                                                ''
+                                            )
+                                        "
+                                    />
+                                </div>
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.phone"
+                                />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel
+                                    for="password"
+                                    value="Parolă"
+                                    :required="true"
+                                />
+                                <TextInput
+                                    id="password"
+                                    type="password"
+                                    class="mt-1 block w-full"
+                                    v-model="form.password"
+                                    autocomplete="new-password"
+                                />
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.password"
+                                />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel
+                                    for="password_confirmation"
+                                    value="Confirmă parola"
+                                    :required="true"
+                                />
+                                <TextInput
+                                    id="password_confirmation"
+                                    type="password"
+                                    class="mt-1 block w-full"
+                                    v-model="form.password_confirmation"
+                                    autocomplete="new-password"
+                                />
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.password_confirmation"
+                                />
+                            </div>
+                        </template>
+
+                        <template v-if="selectedTab === 'dentist'">
+                            <div>
+                                <InputLabel
+                                    for="name"
+                                    value="Nume complet"
+                                    :required="true"
+                                />
+                                <TextInput
+                                    id="name"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    v-model="form.name"
+                                    autofocus
+                                    autocomplete="name"
+                                />
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.name"
+                                />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel
+                                    for="cui"
+                                    value="CUI"
+                                    :required="true"
+                                />
+                                <TextInput
+                                    id="cui"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    v-model="form.cui"
+                                    autofocus
+                                    autocomplete="cui"
+                                />
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.cui"
+                                />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel
+                                    for="email"
+                                    value="Email"
+                                    :required="true"
+                                />
+                                <TextInput
+                                    id="email"
+                                    type="email"
+                                    class="mt-1 block w-full"
+                                    v-model="form.email"
+                                    autocomplete="username"
+                                />
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.email"
+                                />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel for="phone" value="Telefon" />
+                                <div class="flex items-center">
+                                    <TextInput
+                                        id="phone"
+                                        type="text"
+                                        class="mt-1 block w-full"
+                                        v-model="form.phone"
+                                        maxlength="10"
+                                        @input="
+                                            form.phone = form.phone.replace(
+                                                /\D/g,
+                                                ''
+                                            )
+                                        "
+                                    />
+                                </div>
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.phone"
+                                />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel
+                                    for="password"
+                                    value="Parolă"
+                                    :required="true"
+                                />
+                                <TextInput
+                                    id="password"
+                                    type="password"
+                                    class="mt-1 block w-full"
+                                    v-model="form.password"
+                                    autocomplete="new-password"
+                                />
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.password"
+                                />
+                            </div>
+
+                            <div class="mt-4">
+                                <InputLabel
+                                    for="password_confirmation"
+                                    value="Confirmă parola"
+                                    :required="true"
+                                />
+                                <TextInput
+                                    id="password_confirmation"
+                                    type="password"
+                                    class="mt-1 block w-full"
+                                    v-model="form.password_confirmation"
+                                    autocomplete="new-password"
+                                />
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.password_confirmation"
+                                />
+                            </div>
+                        </template>
+
+                        <div class="flex items-center justify-end mt-4">
+                            <Link
+                                :href="route('login')"
+                                style="text-decoration: none"
+                                class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                Ai cont deja? Conectează-te aici!
+                            </Link>
+
+                            <PrimaryButton
+                                class="ms-4"
+                                :class="{ 'opacity-25': form.processing }"
+                                :disabled="form.processing"
+                            >
+                                Crează cont
+                            </PrimaryButton>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="mt-4">
-                    <InputLabel
-                        for="password"
-                        value="Parolă"
-                        :required="true"
-                    />
-                    <TextInput
-                        id="password"
-                        type="password"
-                        class="mt-1 block w-full"
-                        v-model="form.password"
-                        autocomplete="new-password"
-                    />
-                    <InputError class="mt-2" :message="form.errors.password" />
-                </div>
-
-                <div class="mt-4">
-                    <InputLabel
-                        for="password_confirmation"
-                        value="Confirmă parola"
-                        :required="true"
-                    />
-                    <TextInput
-                        id="password_confirmation"
-                        type="password"
-                        class="mt-1 block w-full"
-                        v-model="form.password_confirmation"
-                        autocomplete="new-password"
-                    />
-                    <InputError
-                        class="mt-2"
-                        :message="form.errors.password_confirmation"
-                    />
-                </div>
-            </template>
-
-            <template v-if="selectedTab === 'dentist'">
-                <div>
-                    <InputLabel
-                        for="name"
-                        value="Nume complet"
-                        :required="true"
-                    />
-                    <TextInput
-                        id="name"
-                        type="text"
-                        class="mt-1 block w-full"
-                        v-model="form.name"
-                        autofocus
-                        autocomplete="name"
-                    />
-                    <InputError class="mt-2" :message="form.errors.name" />
-                </div>
-
-                <div class="mt-4">
-                    <InputLabel for="cui" value="CUI" :required="true" />
-                    <TextInput
-                        id="cui"
-                        type="text"
-                        class="mt-1 block w-full"
-                        v-model="form.cui"
-                        autofocus
-                        autocomplete="cui"
-                    />
-                    <InputError class="mt-2" :message="form.errors.cui" />
-                </div>
-
-                <div class="mt-4">
-                    <InputLabel for="email" value="Email" :required="true" />
-                    <TextInput
-                        id="email"
-                        type="email"
-                        class="mt-1 block w-full"
-                        v-model="form.email"
-                        autocomplete="username"
-                    />
-                    <InputError class="mt-2" :message="form.errors.email" />
-                </div>
-
-                <div class="mt-4">
-                    <InputLabel for="phone" value="Telefon" />
-                    <div class="flex items-center">
-                        <TextInput
-                            id="phone"
-                            type="text"
-                            class="mt-1 block w-full"
-                            v-model="form.phone"
-                            maxlength="10"
-                            @input="form.phone = form.phone.replace(/\D/g, '')"
-                        />
-                    </div>
-                    <InputError class="mt-2" :message="form.errors.phone" />
-                </div>
-
-                <div class="mt-4">
-                    <InputLabel
-                        for="password"
-                        value="Parolă"
-                        :required="true"
-                    />
-                    <TextInput
-                        id="password"
-                        type="password"
-                        class="mt-1 block w-full"
-                        v-model="form.password"
-                        autocomplete="new-password"
-                    />
-                    <InputError class="mt-2" :message="form.errors.password" />
-                </div>
-
-                <div class="mt-4">
-                    <InputLabel
-                        for="password_confirmation"
-                        value="Confirmă parola"
-                        :required="true"
-                    />
-                    <TextInput
-                        id="password_confirmation"
-                        type="password"
-                        class="mt-1 block w-full"
-                        v-model="form.password_confirmation"
-                        autocomplete="new-password"
-                    />
-                    <InputError
-                        class="mt-2"
-                        :message="form.errors.password_confirmation"
-                    />
-                </div>
-            </template>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link
-                    :href="route('login')"
-                    style="text-decoration: none"
-                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                    Ai cont deja? Conectează-te aici!
-                </Link>
-
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Crează cont
-                </PrimaryButton>
             </div>
-        </form>
+        </div>
     </GuestLayout>
 </template>
 

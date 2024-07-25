@@ -5,6 +5,7 @@ use App\Models\County;
 use App\Models\Doctor;
 use App\Models\Review;
 use App\Models\Consult;
+use App\Models\Appointment;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MedicController;
 use App\Http\Controllers\ConsultController;
@@ -13,9 +14,15 @@ use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ConsultClientController;
 
+// Route::get('/', function () {
+//     return Inertia::render('Auth/Login');
+// });
+
 Route::get('/', function () {
-    return Inertia::render('Auth/Login');
-});
+    $consults = Consult::with(['city', 'county', 'doctor', 'reviews'])->get();
+    $appointments = Appointment::all();
+    return Inertia::render('Consult/Client/AllConsultsClientGuest', ['consults' => $consults, 'appointments' => $appointments]);
+})->name('homepage');
 
 Route::get('/dashboard', function () {
     $user = auth()->user();
@@ -29,13 +36,16 @@ Route::get('/dashboard', function () {
         'counties' => $counties,
         'doctors' => $doctors,
     ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/welcome', function () {
     return Inertia::render('Welcome');
-})->middleware(['auth', 'verified'])->name('welcome');
+})->middleware(['auth'])->name('welcome');
+// })->middleware(['auth', 'verified'])->name('welcome');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+// Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
