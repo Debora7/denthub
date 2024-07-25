@@ -38,13 +38,9 @@ Route::get('/dashboard', function () {
     ]);
 })->middleware(['auth'])->name('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
-})->middleware(['auth'])->name('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/welcome', function () {
     return Inertia::render('Welcome');
-})->middleware(['auth'])->name('welcome');
-// })->middleware(['auth', 'verified'])->name('welcome');
 })->middleware(['auth'])->name('welcome');
 // })->middleware(['auth', 'verified'])->name('welcome');
 
