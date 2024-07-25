@@ -19,6 +19,8 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "@inertiajs/inertia": "^0.11.1",
+        "@inertiajs/progress": "^0.2.7",
         "@popperjs/core": "^2.11.8",
         "@vuepic/vue-datepicker": "^8.8.1",
         "bootstrap": "^5.1.3",
