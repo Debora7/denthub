@@ -18,11 +18,19 @@ export default defineConfig({
         }),
     ],
     build: {
-        outDir: "public",
+        manifest: true,
+        outDir: 'public/build/',
     },
     server: {
-        host: 'dentportal.ro',
+        host: 'localhost',
         port: 5173,
+        cors: {
+            origin: '*', // Allow all origins
+        },
+        hmr: {
+            host: 'localhost',
+            protocol: 'ws',
+        },
     },
     base: 'https://dentportal.ro/', // Ensure this is the correct base URL
 });
