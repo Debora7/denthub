@@ -56,14 +56,14 @@ const userRole = props.auth.user.cui;
                                     :href="route('dashboard')"
                                     :active="route().current('dashboard')"
                                 >
-                                    Servicii
+                                    Proceduri
                                 </NavLink>
                                 <NavLink
                                     v-if="userRole !== null"
                                     :href="route('consult.index')"
                                     :active="route().current('consult.index')"
                                 >
-                                    Serviciu nou
+                                    Procedură nouă
                                 </NavLink>
                                 <NavLink
                                     v-if="userRole !== null"
@@ -92,7 +92,7 @@ const userRole = props.auth.user.cui;
                                         route().current('consult.client.index')
                                     "
                                 >
-                                    Servicii
+                                    Proceduri
                                 </NavLink>
                                 <NavLink
                                     v-if="userRole === null"
