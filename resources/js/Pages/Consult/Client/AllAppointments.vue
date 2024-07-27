@@ -10,7 +10,7 @@ import Modal from "@/Components/Modal.vue";
 import "@vuepic/vue-datepicker/dist/main.css";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
-import Rating from 'primevue/rating';
+import Rating from "primevue/rating";
 import TextareaInput from "@/Components/TextareaInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 
@@ -72,10 +72,6 @@ const selectedDate = ref(null);
 const selectedStatus = ref("");
 
 const now = new Date();
-
-const disabledDates = (date) => {
-    return date < new Date(now.toDateString());
-};
 
 const filteredAppointments = computed(() => {
     const searchLower = searchQuery.value.toLowerCase();
@@ -210,7 +206,7 @@ const submitReview = () => {
                             <option value="">Status</option>
                             <option value="Confirmată">Confirmată</option>
                             <option value="Anulată">Anulată</option>
-                            <option value="Anulată">Onorată</option>
+                            <option value="Onorată">Onorată</option>
                         </select>
                     </div>
                 </div>
@@ -286,7 +282,9 @@ const submitReview = () => {
                                     >
                                     <DangerButton
                                         class="ms-3 mt-2"
-                                        v-if="appointment.status === 'Confirmată'"
+                                        v-if="
+                                            appointment.status === 'Confirmată'
+                                        "
                                         @click="
                                             openModalDeletAppointment(
                                                 appointment
@@ -449,16 +447,13 @@ const submitReview = () => {
                         />
                         <Rating
                             class="mt-1 block w-full"
-                            v-model="formReview.rating" 
+                            v-model="formReview.rating"
                             :stars="5"
                         />
                     </div>
 
                     <div class="mt-4">
-                        <InputLabel
-                            for="rating"
-                            value="Exteriența ta"
-                        />
+                        <InputLabel for="rating" value="Exteriența ta" />
                         <TextareaInput
                             v-model="formReview.review"
                             class="mt-1 block w-full"
