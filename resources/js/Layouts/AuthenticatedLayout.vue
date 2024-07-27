@@ -25,13 +25,7 @@ const userRole = props.auth.user.cui;
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link
-                                    :href="
-                                        userRole !== null
-                                            ? route(
-                                                  'consult.medic.appointment.index'
-                                              )
-                                            : route('consult.client.index')
-                                    "
+                                    :href="route('about-us')"
                                     style="text-decoration: none"
                                 >
                                     <ApplicationLogo

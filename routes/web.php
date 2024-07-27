@@ -3,7 +3,6 @@
 use Inertia\Inertia;
 use App\Models\County;
 use App\Models\Doctor;
-use App\Models\Review;
 use App\Models\Consult;
 use App\Models\Appointment;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +22,10 @@ Route::get('/', function () {
     $appointments = Appointment::all();
     return Inertia::render('Consult/Client/AllConsultsClientGuest', ['consults' => $consults, 'appointments' => $appointments]);
 })->name('homepage');
+
+Route::get('/about-us', function () {
+    return Inertia::render('AboutUs');
+})->name('about-us');
 
 Route::get('/dashboard', function () {
     $user = auth()->user();
