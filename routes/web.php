@@ -3,7 +3,6 @@
 use Inertia\Inertia;
 use App\Models\County;
 use App\Models\Doctor;
-use App\Models\Review;
 use App\Models\Consult;
 use App\Models\Appointment;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +22,10 @@ Route::get('/', function () {
     $appointments = Appointment::all();
     return Inertia::render('Consult/Client/AllConsultsClientGuest', ['consults' => $consults, 'appointments' => $appointments]);
 })->name('homepage');
+
+Route::get('/about-us-guest', function () {
+    return Inertia::render('AboutUsGuest');
+})->name('about-us-guest');
 
 Route::get('/dashboard', function () {
     $user = auth()->user();
@@ -49,6 +52,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/about-us', function () {
+        return Inertia::render('AboutUs');
+    })->name('about-us');
 
     Route::prefix('consult')->name('consult.')->group(function () {
         Route::get('/index', [ConsultController::class, 'index'])->name('index');

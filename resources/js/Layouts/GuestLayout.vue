@@ -1,6 +1,7 @@
 <script setup>
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import { Link } from "@inertiajs/vue3";
+import NavLink from "@/Components/NavLink.vue";
 </script>
 
 <template>
@@ -14,13 +15,23 @@ import { Link } from "@inertiajs/vue3";
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link
-                                    :href="route('homepage')"
+                                    :href="route('about-us-guest')"
                                     style="text-decoration: none"
                                 >
                                     <ApplicationLogo
                                         class="block h-9 w-auto fill-current text-gray-800"
                                     />
                                 </Link>
+                            </div>
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('homepage')"
+                                    :active="route('homepage')"
+                                >
+                                    Proceduri
+                                </NavLink>
                             </div>
                         </div>
                         <div class="hidden sm:flex sm:items-center">
