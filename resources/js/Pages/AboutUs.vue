@@ -62,7 +62,8 @@ import { Head } from "@inertiajs/vue3";
                                 </p>
                                 <p>
                                     <strong>Email: </strong>
-                                    <a href="mailto:info@dentportal.com"
+                                    <a
+                                        href="https://mail.google.com/mail/?view=cm&fs=1&to=denthub.contact@yahoo.com"
                                         >denthub.contact@yahoo.com</a
                                     >
                                 </p>
