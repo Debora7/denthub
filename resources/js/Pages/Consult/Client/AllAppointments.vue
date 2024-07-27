@@ -517,19 +517,19 @@ const submitReview = () => {
 }
 
 .badge-primary {
-    color: #000;
+    color: #fff;
     background-color: #28a745;
     font-weight: normal;
 }
 
 .badge-danger {
-    color: #000;
+    color: #fff;
     background-color: #dc3545;
     font-weight: normal;
 }
 
 .badge-success {
-    color: #000;
+    color: #fff;
     background-color: #007bff;
     font-weight: normal;
 }
@@ -565,7 +565,7 @@ button + button {
 }
 
 .info-icon {
-    color: #e63946;
+    color: #dc3545;
     font-size: 10px;
     vertical-align: super;
     margin-right: 2px;

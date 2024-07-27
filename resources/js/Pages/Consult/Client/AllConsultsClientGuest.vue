@@ -440,7 +440,7 @@ const toggleSortOrder = () => {
 }
 
 .info-icon {
-    color: #e63946;
+    color: #dc3545;
     font-size: 10px;
     vertical-align: super;
     margin-right: 2px;
