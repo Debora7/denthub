@@ -261,10 +261,22 @@ const toggleSortOrder = () => {
                                     </div>
                                     <p
                                         class="card-text"
-                                        style="font-size: 20px"
+                                        style="
+                                            font-size: 20px;
+                                            position: relative;
+                                        "
                                     >
+                                        <i
+                                            class="fas fa-info-circle info-icon"
+                                            title="Prețul poate varia în funcție de complexitatea situației"
+                                        ></i>
                                         <strong>Preț:</strong>
+
                                         {{ consult.price }} Lei
+                                        <span class="tooltip-text"
+                                            >Prețul poate varia în funcție de
+                                            complexitatea situației</span
+                                        >
                                     </p>
 
                                     <div>
@@ -424,20 +436,48 @@ const toggleSortOrder = () => {
 
 .card-text {
     font-size: 1rem;
+    position: relative;
 }
 
-.badge {
-    display: inline-block;
-    padding: 0.5em;
-    margin: 0.2em;
-    background-color: #28a745;
-    border-radius: 0.25em;
+.info-icon {
+    color: #e63946;
+    font-size: 10px;
+    vertical-align: super;
+    margin-right: 2px;
     cursor: pointer;
-    color: #fff;
-    font-weight: normal;
 }
 
-.badge-selected {
-    background-color: #007bff;
+.tooltip-text {
+    visibility: hidden;
+    width: 300px;
+    background-color: #f4a261;
+    color: #2d2d2d;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.9rem;
+}
+
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #f4a261 transparent transparent transparent;
+}
+
+.card-text:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
 }
 </style>
