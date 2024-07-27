@@ -450,7 +450,7 @@ const submit = () => {
                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                                         >
                                             <button
-                                                class="bg-green-500 text-white px-2 py-1"
+                                                class="bg-[#28a745] text-white px-2 py-1"
                                                 style="
                                                     border-radius: 50%;
                                                     width: 32px;
@@ -465,7 +465,7 @@ const submit = () => {
                                                 <i class="fas fa-check"></i>
                                             </button>
                                             <button
-                                                class="bg-red-500 text-white px-2 py-1 ml-2"
+                                                class="bg-[#dc3545] text-white px-2 py-1 ml-2"
                                                 style="
                                                     border-radius: 50%;
                                                     width: 32px;

@@ -2,6 +2,13 @@
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import { Link } from "@inertiajs/vue3";
 import NavLink from "@/Components/NavLink.vue";
+import { ref } from "vue";
+
+const isOpen = ref(false);
+
+function toggleMenu() {
+    isOpen.value = !isOpen.value;
+}
 </script>
 
 <template>
@@ -51,6 +58,65 @@ import NavLink from "@/Components/NavLink.vue";
                                 </div>
                             </div>
                         </div>
+                        <!-- Mobile menu button-->
+                        <div class="flex items-center sm:hidden">
+                            <button
+                                @click="toggleMenu"
+                                class="text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700"
+                            >
+                                <svg
+                                    class="h-6 w-6"
+                                    stroke="currentColor"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        :class="{
+                                            hidden: showingNavigationDropdown,
+                                            'inline-flex':
+                                                !showingNavigationDropdown,
+                                        }"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M4 6h16M4 12h16M4 18h16"
+                                    />
+                                    <path
+                                        :class="{
+                                            hidden: !showingNavigationDropdown,
+                                            'inline-flex':
+                                                showingNavigationDropdown,
+                                        }"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Responsive Navigation Menu -->
+                <div
+                    :class="{ block: isOpen, hidden: !isOpen }"
+                    class="sm:hidden"
+                >
+                    <div class="pt-2 pb-3 space-y-1">
+                        <NavLink
+                            :href="route('homepage')"
+                            :active="route('homepage')"
+                            class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 focus:outline-none focus:text-gray-800 focus:bg-gray-50 transition duration-150 ease-in-out"
+                        >
+                            Proceduri
+                        </NavLink>
+                        <Link
+                            :href="route('login')"
+                            class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 focus:outline-none focus:text-gray-800 focus:bg-gray-50 transition duration-150 ease-in-out"
+                        >
+                            Login
+                        </Link>
                     </div>
                 </div>
             </nav>

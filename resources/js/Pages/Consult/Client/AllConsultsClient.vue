@@ -461,10 +461,22 @@ const showNotification = (message, type = "success") => {
                                     </div>
                                     <p
                                         class="card-text"
-                                        style="font-size: 20px"
+                                        style="
+                                            font-size: 20px;
+                                            position: relative;
+                                        "
                                     >
+                                        <i
+                                            class="fas fa-info-circle info-icon"
+                                            title="Prețul poate varia în funcție de complexitatea situației"
+                                        ></i>
                                         <strong>Preț:</strong>
+
                                         {{ consult.price }} Lei
+                                        <span class="tooltip-text"
+                                            >Prețul poate varia în funcție de
+                                            complexitatea situației</span
+                                        >
                                     </p>
 
                                     <div>
@@ -706,6 +718,7 @@ const showNotification = (message, type = "success") => {
 
 .card-text {
     font-size: 1rem;
+    position: relative;
 }
 
 .badge {
@@ -721,5 +734,47 @@ const showNotification = (message, type = "success") => {
 
 .badge-selected {
     background-color: #007bff;
+}
+
+.info-icon {
+    color: #dc3545;
+    font-size: 10px;
+    vertical-align: super;
+    margin-right: 2px;
+    cursor: pointer;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 300px;
+    background-color: #f4a261;
+    color: #2d2d2d;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.9rem;
+}
+
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #f4a261 transparent transparent transparent;
+}
+
+.card-text:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
 }
 </style>

@@ -179,7 +179,7 @@ const deleteMedic = () => {
                                             <button
                                                 type="button"
                                                 @click="editDoctor(doctor)"
-                                                class="inline-flex items-center justify-center text-center p-2 bg-yellow-500 border border-transparent rounded-full text-white hover:bg-yellow-700 active:bg-yellow-900 focus:outline-none focus:border-yellow-900 focus:shadow-outline-yellow transition ease-in-out duration-150 ml-2"
+                                                class="inline-flex items-center justify-center text-center p-2 bg-[#F4A261] border border-transparent rounded-full text-white hover:bg-[#F4A261] active:bg-[#F4A261] focus:outline-none focus:border-[#F4A261] focus:shadow-outline-[#F4A261] transition ease-in-out duration-150 ml-2"
                                             >
                                                 <i class="fas fa-pencil"></i>
                                             </button>
@@ -188,7 +188,7 @@ const deleteMedic = () => {
                                                 @click="
                                                     deleteDoctorModal(doctor)
                                                 "
-                                                class="inline-flex items-center justify-center text-center p-2 bg-red-500 border border-transparent rounded-full text-white hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:shadow-outline-red transition ease-in-out duration-150 ml-2"
+                                                class="inline-flex items-center justify-center text-center p-2 bg-[#dc3545] border border-transparent rounded-full text-white hover:bg-[#dc3545] active:bg-[#dc3545] focus:outline-none focus:border-[#dc3545] focus:shadow-outline-[#dc3545] transition ease-in-out duration-150 ml-2"
                                             >
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
