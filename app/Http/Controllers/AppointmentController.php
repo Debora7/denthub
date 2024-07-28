@@ -9,7 +9,9 @@ use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\AppointmentCancellation;
 use App\Mail\AppointmentConfirmation;
+use App\Mail\AppointmentCancellationMedic;
 
 class AppointmentController extends Controller
 {
@@ -91,10 +93,12 @@ class AppointmentController extends Controller
 
     public function missed(Request $request)
     {
-        $appointment = Appointment::find($request->id);
-        $appointment->status = 'Anulată';
+        $appointment = Appointment::with('user')->find($request->id);
 
+        $appointment->status = 'Anulată';
         $appointment->save();
+
+        Mail::to($appointment->user->email)->send(new AppointmentCancellationMedic($appointment));
 
         return redirect()->route('consult.medic.appointment.index');
     }
@@ -105,8 +109,11 @@ class AppointmentController extends Controller
         if ($appointment) {
             $appointment->status = 'Anulată';
             $appointment->save();
-            $appointment->delete(); // Perform the soft delete after saving the status change
+            $appointment->delete();
         }
+
+        Mail::to(Auth::user()->email)->send(new AppointmentCancellation($appointment));
+
         return redirect()->route('consult.client.appointment.index');
     }
 }

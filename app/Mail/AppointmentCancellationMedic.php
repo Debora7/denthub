@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class AppointmentConfirmation extends Mailable
+class AppointmentCancellationMedic extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -19,7 +19,7 @@ class AppointmentConfirmation extends Mailable
 
     public function build()
     {
-        return $this->subject('Confirmarea programării')
-            ->view('emails.appointment_confirmation');
+        return $this->subject('Anularea programării')
+            ->view('emails.appointment_cancellation_medic');
     }
 }
