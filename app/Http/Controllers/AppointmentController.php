@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Inertia\Inertia;
-use App\Models\Appointment;
 use App\Models\Doctor;
+use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AppointmentConfirmation;
 
 class AppointmentController extends Controller
 {
@@ -54,6 +56,8 @@ class AppointmentController extends Controller
             ->format('Y-m-d H:i');
         $appointment->status = 'Confirmată';
         $appointment->save();
+
+        Mail::to(Auth::user()->email)->send(new AppointmentConfirmation($appointment));
 
         return redirect()->route('consult.client.appointment.index');
     }

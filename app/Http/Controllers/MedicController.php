@@ -8,6 +8,8 @@ use Inertia\Inertia;
 use App\Models\Doctor;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AppointmentConfirmation;
 
 class MedicController extends Controller
 {
@@ -108,6 +110,8 @@ class MedicController extends Controller
             ->format('Y-m-d H:i');
 
         $appointment->save();
+
+        Mail::to($request->email)->send(new AppointmentConfirmation($appointment));
 
         return redirect()->route('consult.medic.appointment.index');
     }
