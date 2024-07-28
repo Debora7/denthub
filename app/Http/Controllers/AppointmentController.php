@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\AppointmentCancellation;
 use App\Mail\AppointmentConfirmation;
 use App\Mail\AppointmentCancellationMedic;
+use App\Mail\AppointmentReview;
 
 class AppointmentController extends Controller
 {
@@ -82,10 +83,12 @@ class AppointmentController extends Controller
 
     public function honored(Request $request)
     {
-        $appointment = Appointment::find($request->id);
+        $appointment = Appointment::with('user')->find($request->id);
         $appointment->status = 'Onorată';
 
         $appointment->save();
+
+        Mail::to($appointment->user->email)->send(new AppointmentReview($appointment));
 
         return redirect()->route('consult.medic.appointment.index');
     }

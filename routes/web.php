@@ -13,10 +13,6 @@ use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ConsultClientController;
 
-// Route::get('/', function () {
-//     return Inertia::render('Auth/Login');
-// });
-
 Route::get('/', function () {
     $consults = Consult::with(['city', 'county', 'doctor', 'reviews'])->get();
     $appointments = Appointment::all();
