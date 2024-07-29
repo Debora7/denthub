@@ -65,14 +65,13 @@ class MedicController extends Controller
 
     public function update(Request $request)
     {
-        // dd($request);
         $request->validate([
             'doctor' => 'string|max:255',
             'workingDays' => 'array',
             'workingDays.*.enabled' => 'required|boolean',
             'workingDays.*.start_time' => 'nullable|date_format:H:i',
             'workingDays.*.end_time' => 'nullable|date_format:H:i',
-            // 'image' => 'nullable|mimes:jpeg,jpg,png|max:2048',
+            'image' => 'nullable|mimes:jpeg,jpg,png|max:2048',
             'description' => 'nullable|string',
         ]);
 
@@ -85,10 +84,10 @@ class MedicController extends Controller
         $doctor->name = $request->doctor;
         $doctor->working_days = json_encode($workingDays);
         $doctor->description = $request->description;
-        // if ($request->hasFile('image')) {
-        //     $imagePath = $request->file('image')->store('images', 'public');
-        //     $doctor->image = $imagePath;
-        // }
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $doctor->image = $imagePath;
+        }
 
         $doctor->update();
 

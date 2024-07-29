@@ -27,7 +27,7 @@ const itemsPerPage = ref(itemsPerPageOptions[0]);
 
 const form = useForm({
     doctor: "",
-    // image: null,
+    image: null,
     description: "",
     workingDays: {
         Luni: { enabled: false, start_time: "", end_time: "" },
@@ -42,13 +42,24 @@ const form = useForm({
     errors: {
         doctor: "",
         workingDays: "",
-        // image: "",
+        image: "",
         description: "",
     },
 });
 
-// const image = ref("");
-// const imageSrc = ref(null);
+const image = ref("");
+const imageSrc = ref(null);
+
+const onFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imageSrc.value = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+};
 
 const paginatedDoctors = computed(() => {
     const start = (currentPage.value - 1) * itemsPerPage.value;
@@ -72,6 +83,8 @@ const changeItemsPerPage = (event) => {
 };
 
 const closeModalEdit = () => {
+    form.image = null;
+    imageSrc.value = null;
     modalEditDoctor.value = false;
 };
 
@@ -82,7 +95,7 @@ const closeModalDelete = () => {
 const editDoctor = (doctor) => {
     form.id = doctor.id;
     form.doctor = doctor.name;
-    // image.value = doctor.image;
+    image.value = doctor.image;
     form.description = doctor.description;
 
     form.workingDays = { ...form.workingDays, ...doctor.working_days_modified };
@@ -97,7 +110,7 @@ const deleteDoctorModal = (doctor) => {
 };
 
 const submit = () => {
-    form.put(route("consult.medic.update", { id: form.id }), {
+    form.post(route("consult.medic.update", { id: form.id }), {
         preserveScroll: true,
         data: {
             ...form,
@@ -385,7 +398,7 @@ const deleteMedic = () => {
 
                         <div>
                             <!-- Image -->
-                            <!-- <div>
+                            <div>
                                 <InputLabel for="image" value="Imagine" />
                                 <FileInput
                                     id="image"
@@ -396,7 +409,7 @@ const deleteMedic = () => {
                                     class="mt-2"
                                     :message="form.errors.image"
                                 />
-                            </div> -->
+                            </div>
 
                             <!-- Description -->
                             <div class="mt-4">
@@ -417,7 +430,7 @@ const deleteMedic = () => {
                             </div>
 
                             <!-- Display Image if Exists -->
-                            <!-- <div v-if="image" class="mt-4">
+                            <div class="mt-4">
                                 <ImageDisplay
                                     v-if="imageSrc || image"
                                     :src="
@@ -428,7 +441,7 @@ const deleteMedic = () => {
                                     maxWidth="200px"
                                     maxHeight="200px"
                                 />
-                            </div> -->
+                            </div>
                         </div>
                     </div>
 
