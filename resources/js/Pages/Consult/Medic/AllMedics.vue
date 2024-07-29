@@ -97,8 +97,19 @@ const editDoctor = (doctor) => {
     form.doctor = doctor.name;
     image.value = doctor.image;
     form.description = doctor.description;
+    form.workingDays = { ...form.workingDays };
 
-    form.workingDays = { ...form.workingDays, ...doctor.working_days_modified };
+    Object.keys(form.workingDays).forEach((day) => {
+        if (doctor.working_days_modified[day]) {
+            form.workingDays[day] = {
+                ...doctor.working_days_modified[day],
+                enabled:
+                    doctor.working_days_modified[day].start_time !== null &&
+                    doctor.working_days_modified[day].end_time !== null,
+            };
+        }
+    });
+
     modalEditDoctor.value = true;
 };
 
@@ -107,7 +118,19 @@ const deleteDoctorModal = (doctor) => {
     form.doctor = doctor.name;
     form.description = doctor.description;
     image.value = doctor.image;
-    form.workingDays = { ...form.workingDays, ...doctor.working_days_modified };
+    form.workingDays = { ...form.workingDays };
+
+    Object.keys(form.workingDays).forEach((day) => {
+        if (doctor.working_days_modified[day]) {
+            form.workingDays[day] = {
+                ...doctor.working_days_modified[day],
+                enabled:
+                    doctor.working_days_modified[day].start_time !== null &&
+                    doctor.working_days_modified[day].end_time !== null,
+            };
+        }
+    });
+
     modalDeleteDoctor.value = true;
 };
 
@@ -350,10 +373,8 @@ const deleteMedic = () => {
                                     value="Programul de lucru"
                                 />
                                 <div
-                                    v-for="(day, index) in Object.keys(
-                                        form.workingDays
-                                    )"
-                                    :key="index"
+                                    v-for="(schedule, day) in form.workingDays"
+                                    :key="day"
                                     class="mt-4"
                                 >
                                     <div class="flex items-center">
@@ -478,10 +499,8 @@ const deleteMedic = () => {
                         <!-- Working Days -->
                         <div>
                             <div
-                                v-for="(day, index) in Object.keys(
-                                    form.workingDays
-                                )"
-                                :key="index"
+                                v-for="(schedule, day) in form.workingDays"
+                                :key="day"
                                 class="mt-2"
                             >
                                 <p class="text-gray-700">
