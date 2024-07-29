@@ -13,7 +13,9 @@ class Doctor extends Model
     protected $fillable = [
         'name',
         'working_days',
-        'user_id'
+        'user_id',
+        'image',
+        'description'
     ];
 
     public function consults()

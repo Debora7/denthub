@@ -4,12 +4,16 @@ import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
+import TextareaInput from "@/Components/TextareaInput.vue";
+import FileInput from "@/Components/FileInput.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 
 const form = useForm({
     doctor: "",
+    image: null,
+    description: "",
     workingDays: {
         Luni: { enabled: false, start_time: "", end_time: "" },
         Marți: { enabled: false, start_time: "", end_time: "" },
@@ -21,6 +25,8 @@ const form = useForm({
     },
     errors: {
         doctor: "",
+        image: "",
+        description: "",
         workingDays: "",
     },
 });
@@ -129,6 +135,34 @@ const showNotification = (message, type = "success") => {
                                 <InputError
                                     class="mt-2"
                                     :message="form.errors.workingDays"
+                                />
+                            </div>
+
+                            <!-- Image -->
+                            <div class="mt-4">
+                                <InputLabel for="image" value="Imagine" />
+                                <FileInput id="image" v-model="form.image" />
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.image"
+                                />
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mt-4">
+                                <InputLabel
+                                    for="description"
+                                    value="Descriere"
+                                />
+                                <TextareaInput
+                                    id="description"
+                                    class="mt-1 block w-full"
+                                    v-model="form.description"
+                                    rows="4"
+                                ></TextareaInput>
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.description"
                                 />
                             </div>
 

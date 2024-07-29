@@ -26,6 +26,8 @@ class MedicController extends Controller
             'workingDays.*.enabled' => 'required|boolean',
             'workingDays.*.start_time' => 'nullable|date_format:H:i',
             'workingDays.*.end_time' => 'nullable|date_format:H:i',
+            'image' => 'nullable|mimes:jpeg,jpg,png|max:2048',
+            'description' => 'nullable|string',
         ]);
 
         $user_id = auth()->id();
@@ -34,6 +36,12 @@ class MedicController extends Controller
         $doctor->user_id = $user_id;
         $doctor->name = $request->doctor;
         $doctor->working_days = json_encode($request->workingDays);
+        $doctor->description = $request->description;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $doctor->image = $imagePath;
+        }
+
         $doctor->save();
 
         return redirect()->route('consult.medic.allMedics');
