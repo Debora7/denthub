@@ -105,6 +105,8 @@ const editDoctor = (doctor) => {
 const deleteDoctorModal = (doctor) => {
     form.id = doctor.id;
     form.doctor = doctor.name;
+    form.description = doctor.description;
+    image.value = doctor.image;
     form.workingDays = { ...form.workingDays, ...doctor.working_days_modified };
     modalDeleteDoctor.value = true;
 };
@@ -458,53 +460,73 @@ const deleteMedic = () => {
         </Modal>
 
         <Modal :show="modalDeleteDoctor" @close="closeModalDelete">
-            <header>
-                <div class="p-6">
-                    <h2 class="text-lg font-medium text-gray-900">
-                        Ești sigur că vrei să ștergi următorul medic?
-                    </h2>
-                    <!-- Doctor name -->
-                    <div class="mt-4">
-                        <p
-                            class="mt-1 block w-full text-gray-700 font-semibold"
-                        >
-                            {{ form.doctor }}
-                        </p>
-                    </div>
-                    <!-- Working Days -->
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Ești sigur că vrei să ștergi următorul medic?
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                    <!-- First Column -->
                     <div>
-                        <div
-                            v-for="(day, index) in Object.keys(
-                                form.workingDays
-                            )"
-                            :key="index"
-                            class="mt-2"
-                        >
-                            <p class="text-gray-700">
-                                {{ day }}:
-                                <span v-if="form.workingDays[day].enabled">
-                                    {{ form.workingDays[day].start_time }} -
-                                    {{ form.workingDays[day].end_time }}
-                                </span>
-                                <span v-else>-</span>
+                        <!-- Doctor name -->
+                        <div>
+                            <p
+                                class="mt-1 block w-full text-gray-700 font-semibold"
+                            >
+                                {{ form.doctor }}
                             </p>
                         </div>
+                        <!-- Working Days -->
+                        <div>
+                            <div
+                                v-for="(day, index) in Object.keys(
+                                    form.workingDays
+                                )"
+                                :key="index"
+                                class="mt-2"
+                            >
+                                <p class="text-gray-700">
+                                    {{ day }}:
+                                    <span v-if="form.workingDays[day].enabled">
+                                        {{ form.workingDays[day].start_time }} -
+                                        {{ form.workingDays[day].end_time }}
+                                    </span>
+                                    <span v-else>-</span>
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <!-- Action Buttons -->
-                    <div class="mt-6 flex justify-end">
-                        <DangerButton
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
-                            @click="deleteMedic"
-                        >
-                            Șterge
-                        </DangerButton>
-                        <SecondaryButton @click="closeModalDelete" class="ms-3">
-                            Închide
-                        </SecondaryButton>
+                    <!-- Second Column -->
+                    <div>
+                        <!-- Description -->
+                        <div v-if="form.description">
+                            <p class="mt-1 block w-full text-gray-700">
+                                {{ form.description }}
+                            </p>
+                        </div>
+                        <!-- Display Image if Exists -->
+                        <div v-if="image" class="mt-4">
+                            <ImageDisplay
+                                :src="`/storage/${image}`"
+                                maxWidth="200px"
+                                maxHeight="200px"
+                            />
+                        </div>
                     </div>
                 </div>
-            </header>
+                <!-- Action Buttons -->
+                <div class="mt-6 flex justify-end">
+                    <DangerButton
+                        :class="{ 'opacity-25': form.processing }"
+                        :disabled="form.processing"
+                        @click="deleteMedic"
+                    >
+                        Șterge
+                    </DangerButton>
+                    <SecondaryButton @click="closeModalDelete" class="ms-3">
+                        Închide
+                    </SecondaryButton>
+                </div>
+            </div>
         </Modal>
     </AuthenticatedLayout>
 </template>
