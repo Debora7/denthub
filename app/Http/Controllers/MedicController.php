@@ -65,17 +65,30 @@ class MedicController extends Controller
 
     public function update(Request $request)
     {
+        // dd($request);
         $request->validate([
             'doctor' => 'string|max:255',
             'workingDays' => 'array',
             'workingDays.*.enabled' => 'required|boolean',
             'workingDays.*.start_time' => 'nullable|date_format:H:i',
             'workingDays.*.end_time' => 'nullable|date_format:H:i',
+            // 'image' => 'nullable|mimes:jpeg,jpg,png|max:2048',
+            'description' => 'nullable|string',
         ]);
+
+        $workingDays = array_map(function ($day) {
+            $day['enabled'] = $day['enabled'] === '1' ? true : false;
+            return $day;
+        }, $request->workingDays);
 
         $doctor = Doctor::find($request->id);
         $doctor->name = $request->doctor;
-        $doctor->working_days = json_encode($request->workingDays);
+        $doctor->working_days = json_encode($workingDays);
+        $doctor->description = $request->description;
+        // if ($request->hasFile('image')) {
+        //     $imagePath = $request->file('image')->store('images', 'public');
+        //     $doctor->image = $imagePath;
+        // }
 
         $doctor->update();
 

@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { defineProps, ref, computed } from "vue";
+import { defineProps, ref, computed, watch } from "vue";
 import Modal from "@/Components/Modal.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -11,6 +11,9 @@ import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 import DangerButton from "@/Components/DangerButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import TextareaInput from "@/Components/TextareaInput.vue";
+import FileInput from "@/Components/FileInput.vue";
+import ImageDisplay from "@/Components/ImageDisplay.vue";
 
 const props = defineProps({
     doctors: Array,
@@ -24,6 +27,8 @@ const itemsPerPage = ref(itemsPerPageOptions[0]);
 
 const form = useForm({
     doctor: "",
+    // image: null,
+    description: "",
     workingDays: {
         Luni: { enabled: false, start_time: "", end_time: "" },
         Marți: { enabled: false, start_time: "", end_time: "" },
@@ -37,8 +42,13 @@ const form = useForm({
     errors: {
         doctor: "",
         workingDays: "",
+        // image: "",
+        description: "",
     },
 });
+
+// const image = ref("");
+// const imageSrc = ref(null);
 
 const paginatedDoctors = computed(() => {
     const start = (currentPage.value - 1) * itemsPerPage.value;
@@ -72,6 +82,9 @@ const closeModalDelete = () => {
 const editDoctor = (doctor) => {
     form.id = doctor.id;
     form.doctor = doctor.name;
+    // image.value = doctor.image;
+    form.description = doctor.description;
+
     form.workingDays = { ...form.workingDays, ...doctor.working_days_modified };
     modalEditDoctor.value = true;
 };
@@ -297,68 +310,126 @@ const deleteMedic = () => {
         <Modal :show="modalEditDoctor" @close="closeModalEdit">
             <div class="p-6">
                 <form @submit.prevent="submit">
-                    <!-- Nume si prenume -->
-                    <div>
-                        <InputLabel for="doctor" value="Nume complet" />
-                        <TextInput
-                            id="doctor"
-                            type="text"
-                            class="mt-1 block w-full"
-                            v-model="form.doctor"
-                            autofocus
-                        />
-                        <InputError
-                            class="mt-2"
-                            :message="form.errors.doctor"
-                        />
-                    </div>
-
-                    <!-- Programul de lucru -->
-                    <div class="mt-4">
-                        <InputLabel
-                            for="workingDays"
-                            value="Programul de lucru"
-                        />
-                        <div
-                            v-for="(day, index) in Object.keys(
-                                form.workingDays
-                            )"
-                            :key="index"
-                            class="mt-4"
-                        >
-                            <div class="flex items-center">
-                                <input
-                                    type="checkbox"
-                                    :id="day"
-                                    v-model="form.workingDays[day].enabled"
-                                    class="form-checkbox h-5 w-5 text-indigo-600"
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <!-- Nume si prenume -->
+                            <div>
+                                <InputLabel for="doctor" value="Nume complet" />
+                                <TextInput
+                                    id="doctor"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    v-model="form.doctor"
+                                    autofocus
                                 />
-                                <label
-                                    :for="day"
-                                    class="ml-3 block text-sm font-medium text-gray-700"
-                                    >{{ day }}</label
-                                >
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.doctor"
+                                />
                             </div>
-                            <div
-                                v-if="form.workingDays[day].enabled"
-                                class="flex mt-2 space-x-4"
-                            >
-                                <input
-                                    type="time"
-                                    v-model="form.workingDays[day].start_time"
-                                    class="form-input block w-full sm:text-sm border-gray-300 rounded-md"
+
+                            <!-- Programul de lucru -->
+                            <div class="mt-4">
+                                <InputLabel
+                                    for="workingDays"
+                                    value="Programul de lucru"
                                 />
-                                <input
-                                    type="time"
-                                    v-model="form.workingDays[day].end_time"
-                                    class="form-input block w-full sm:text-sm border-gray-300 rounded-md"
+                                <div
+                                    v-for="(day, index) in Object.keys(
+                                        form.workingDays
+                                    )"
+                                    :key="index"
+                                    class="mt-4"
+                                >
+                                    <div class="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            :id="day"
+                                            v-model="
+                                                form.workingDays[day].enabled
+                                            "
+                                            class="form-checkbox h-5 w-5 text-indigo-600"
+                                        />
+                                        <label
+                                            :for="day"
+                                            class="ml-3 block text-sm font-medium text-gray-700"
+                                            >{{ day }}</label
+                                        >
+                                    </div>
+                                    <div
+                                        v-if="form.workingDays[day].enabled"
+                                        class="flex mt-2 space-x-4"
+                                    >
+                                        <input
+                                            type="time"
+                                            v-model="
+                                                form.workingDays[day].start_time
+                                            "
+                                            class="form-input block w-full sm:text-sm border-gray-300 rounded-md"
+                                        />
+                                        <input
+                                            type="time"
+                                            v-model="
+                                                form.workingDays[day].end_time
+                                            "
+                                            class="form-input block w-full sm:text-sm border-gray-300 rounded-md"
+                                        />
+                                    </div>
+                                </div>
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.workingDays"
                                 />
                             </div>
                         </div>
-                        <InputError
-                            class="mt-2"
-                            :message="form.errors.workingDays"
-                        />
+
+                        <div>
+                            <!-- Image -->
+                            <!-- <div>
+                                <InputLabel for="image" value="Imagine" />
+                                <FileInput
+                                    id="image"
+                                    v-model="form.image"
+                                    @change="onFileChange"
+                                />
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.image"
+                                />
+                            </div> -->
+
+                            <!-- Description -->
+                            <div class="mt-4">
+                                <InputLabel
+                                    for="description"
+                                    value="Descriere"
+                                />
+                                <TextareaInput
+                                    id="description"
+                                    class="mt-1 block w-full"
+                                    v-model="form.description"
+                                    rows="4"
+                                ></TextareaInput>
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.description"
+                                />
+                            </div>
+
+                            <!-- Display Image if Exists -->
+                            <!-- <div v-if="image" class="mt-4">
+                                <ImageDisplay
+                                    v-if="imageSrc || image"
+                                    :src="
+                                        imageSrc
+                                            ? imageSrc
+                                            : `/storage/${image}`
+                                    "
+                                    maxWidth="200px"
+                                    maxHeight="200px"
+                                />
+                            </div> -->
+                        </div>
                     </div>
 
                     <div class="flex items-center justify-end mt-4">
