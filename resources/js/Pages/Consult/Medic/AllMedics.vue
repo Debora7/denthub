@@ -11,6 +11,9 @@ import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 import DangerButton from "@/Components/DangerButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import TextareaInput from "@/Components/TextareaInput.vue";
+import FileInput from "@/Components/FileInput.vue";
+import ImageDisplay from "@/Components/ImageDisplay.vue";
 
 const props = defineProps({
     doctors: Array,
@@ -24,6 +27,8 @@ const itemsPerPage = ref(itemsPerPageOptions[0]);
 
 const form = useForm({
     doctor: "",
+    image: null,
+    description: "",
     workingDays: {
         Luni: { enabled: false, start_time: "", end_time: "" },
         Marți: { enabled: false, start_time: "", end_time: "" },
@@ -37,8 +42,24 @@ const form = useForm({
     errors: {
         doctor: "",
         workingDays: "",
+        image: "",
+        description: "",
     },
 });
+
+const image = ref("");
+const imageSrc = ref(null);
+
+const onFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imageSrc.value = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+};
 
 const paginatedDoctors = computed(() => {
     const start = (currentPage.value - 1) * itemsPerPage.value;
@@ -62,6 +83,8 @@ const changeItemsPerPage = (event) => {
 };
 
 const closeModalEdit = () => {
+    form.image = null;
+    imageSrc.value = null;
     modalEditDoctor.value = false;
 };
 
@@ -72,19 +95,47 @@ const closeModalDelete = () => {
 const editDoctor = (doctor) => {
     form.id = doctor.id;
     form.doctor = doctor.name;
-    form.workingDays = { ...form.workingDays, ...doctor.working_days_modified };
+    image.value = doctor.image;
+    form.description = doctor.description;
+    form.workingDays = { ...form.workingDays };
+
+    Object.keys(form.workingDays).forEach((day) => {
+        if (doctor.working_days_modified[day]) {
+            form.workingDays[day] = {
+                ...doctor.working_days_modified[day],
+                enabled:
+                    doctor.working_days_modified[day].start_time !== null &&
+                    doctor.working_days_modified[day].end_time !== null,
+            };
+        }
+    });
+
     modalEditDoctor.value = true;
 };
 
 const deleteDoctorModal = (doctor) => {
     form.id = doctor.id;
     form.doctor = doctor.name;
-    form.workingDays = { ...form.workingDays, ...doctor.working_days_modified };
+    form.description = doctor.description;
+    image.value = doctor.image;
+    form.workingDays = { ...form.workingDays };
+
+    Object.keys(form.workingDays).forEach((day) => {
+        if (doctor.working_days_modified[day]) {
+            form.workingDays[day] = {
+                ...doctor.working_days_modified[day],
+                enabled:
+                    doctor.working_days_modified[day].start_time !== null &&
+                    doctor.working_days_modified[day].end_time !== null,
+            };
+        }
+    });
+
     modalDeleteDoctor.value = true;
 };
 
 const submit = () => {
-    form.put(route("consult.medic.update", { id: form.id }), {
+    form.post(route("consult.medic.update", { id: form.id }), {
         preserveScroll: true,
         data: {
             ...form,
@@ -297,68 +348,124 @@ const deleteMedic = () => {
         <Modal :show="modalEditDoctor" @close="closeModalEdit">
             <div class="p-6">
                 <form @submit.prevent="submit">
-                    <!-- Nume si prenume -->
-                    <div>
-                        <InputLabel for="doctor" value="Nume complet" />
-                        <TextInput
-                            id="doctor"
-                            type="text"
-                            class="mt-1 block w-full"
-                            v-model="form.doctor"
-                            autofocus
-                        />
-                        <InputError
-                            class="mt-2"
-                            :message="form.errors.doctor"
-                        />
-                    </div>
-
-                    <!-- Programul de lucru -->
-                    <div class="mt-4">
-                        <InputLabel
-                            for="workingDays"
-                            value="Programul de lucru"
-                        />
-                        <div
-                            v-for="(day, index) in Object.keys(
-                                form.workingDays
-                            )"
-                            :key="index"
-                            class="mt-4"
-                        >
-                            <div class="flex items-center">
-                                <input
-                                    type="checkbox"
-                                    :id="day"
-                                    v-model="form.workingDays[day].enabled"
-                                    class="form-checkbox h-5 w-5 text-indigo-600"
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <!-- Nume si prenume -->
+                            <div>
+                                <InputLabel for="doctor" value="Nume complet" />
+                                <TextInput
+                                    id="doctor"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    v-model="form.doctor"
+                                    autofocus
                                 />
-                                <label
-                                    :for="day"
-                                    class="ml-3 block text-sm font-medium text-gray-700"
-                                    >{{ day }}</label
-                                >
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.doctor"
+                                />
                             </div>
-                            <div
-                                v-if="form.workingDays[day].enabled"
-                                class="flex mt-2 space-x-4"
-                            >
-                                <input
-                                    type="time"
-                                    v-model="form.workingDays[day].start_time"
-                                    class="form-input block w-full sm:text-sm border-gray-300 rounded-md"
+
+                            <!-- Programul de lucru -->
+                            <div class="mt-4">
+                                <InputLabel
+                                    for="workingDays"
+                                    value="Programul de lucru"
                                 />
-                                <input
-                                    type="time"
-                                    v-model="form.workingDays[day].end_time"
-                                    class="form-input block w-full sm:text-sm border-gray-300 rounded-md"
+                                <div
+                                    v-for="(schedule, day) in form.workingDays"
+                                    :key="day"
+                                    class="mt-4"
+                                >
+                                    <div class="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            :id="day"
+                                            v-model="
+                                                form.workingDays[day].enabled
+                                            "
+                                            class="form-checkbox h-5 w-5 text-indigo-600"
+                                        />
+                                        <label
+                                            :for="day"
+                                            class="ml-3 block text-sm font-medium text-gray-700"
+                                            >{{ day }}</label
+                                        >
+                                    </div>
+                                    <div
+                                        v-if="form.workingDays[day].enabled"
+                                        class="flex mt-2 space-x-4"
+                                    >
+                                        <input
+                                            type="time"
+                                            v-model="
+                                                form.workingDays[day].start_time
+                                            "
+                                            class="form-input block w-full sm:text-sm border-gray-300 rounded-md"
+                                        />
+                                        <input
+                                            type="time"
+                                            v-model="
+                                                form.workingDays[day].end_time
+                                            "
+                                            class="form-input block w-full sm:text-sm border-gray-300 rounded-md"
+                                        />
+                                    </div>
+                                </div>
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.workingDays"
                                 />
                             </div>
                         </div>
-                        <InputError
-                            class="mt-2"
-                            :message="form.errors.workingDays"
-                        />
+
+                        <div>
+                            <!-- Description -->
+                            <div>
+                                <InputLabel
+                                    for="description"
+                                    value="Descriere"
+                                />
+                                <TextareaInput
+                                    id="description"
+                                    class="mt-1 block w-full"
+                                    v-model="form.description"
+                                    rows="4"
+                                ></TextareaInput>
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.description"
+                                />
+                            </div>
+
+                            <!-- Image -->
+                            <div class="mt-4">
+                                <InputLabel for="image" value="Imagine" />
+                                <FileInput
+                                    id="image"
+                                    v-model="form.image"
+                                    @change="onFileChange"
+                                />
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.image"
+                                />
+                            </div>
+
+                            <!-- Display Image if Exists -->
+                            <div class="mt-4">
+                                <ImageDisplay
+                                    v-if="imageSrc || image"
+                                    :src="
+                                        imageSrc
+                                            ? imageSrc
+                                            : `/storage/${image}`
+                                    "
+                                    maxWidth="200px"
+                                    maxHeight="200px"
+                                />
+                            </div>
+                        </div>
                     </div>
 
                     <div class="flex items-center justify-end mt-4">
@@ -374,53 +481,71 @@ const deleteMedic = () => {
         </Modal>
 
         <Modal :show="modalDeleteDoctor" @close="closeModalDelete">
-            <header>
-                <div class="p-6">
-                    <h2 class="text-lg font-medium text-gray-900">
-                        Ești sigur că vrei să ștergi următorul medic?
-                    </h2>
-                    <!-- Doctor name -->
-                    <div class="mt-4">
-                        <p
-                            class="mt-1 block w-full text-gray-700 font-semibold"
-                        >
-                            {{ form.doctor }}
-                        </p>
-                    </div>
-                    <!-- Working Days -->
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Ești sigur că vrei să ștergi următorul medic?
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                    <!-- First Column -->
                     <div>
-                        <div
-                            v-for="(day, index) in Object.keys(
-                                form.workingDays
-                            )"
-                            :key="index"
-                            class="mt-2"
-                        >
-                            <p class="text-gray-700">
-                                {{ day }}:
-                                <span v-if="form.workingDays[day].enabled">
-                                    {{ form.workingDays[day].start_time }} -
-                                    {{ form.workingDays[day].end_time }}
-                                </span>
-                                <span v-else>-</span>
+                        <!-- Doctor name -->
+                        <div>
+                            <p
+                                class="mt-1 block w-full text-gray-700 font-semibold"
+                            >
+                                {{ form.doctor }}
                             </p>
                         </div>
+                        <!-- Working Days -->
+                        <div>
+                            <div
+                                v-for="(schedule, day) in form.workingDays"
+                                :key="day"
+                                class="mt-2"
+                            >
+                                <p class="text-gray-700">
+                                    {{ day }}:
+                                    <span v-if="form.workingDays[day].enabled">
+                                        {{ form.workingDays[day].start_time }} -
+                                        {{ form.workingDays[day].end_time }}
+                                    </span>
+                                    <span v-else>-</span>
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <!-- Action Buttons -->
-                    <div class="mt-6 flex justify-end">
-                        <DangerButton
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
-                            @click="deleteMedic"
-                        >
-                            Șterge
-                        </DangerButton>
-                        <SecondaryButton @click="closeModalDelete" class="ms-3">
-                            Închide
-                        </SecondaryButton>
+                    <!-- Second Column -->
+                    <div>
+                        <!-- Description -->
+                        <div v-if="form.description">
+                            <p class="mt-1 block w-full text-gray-700">
+                                {{ form.description }}
+                            </p>
+                        </div>
+                        <!-- Display Image if Exists -->
+                        <div v-if="image" class="mt-4">
+                            <ImageDisplay
+                                :src="`/storage/${image}`"
+                                maxWidth="200px"
+                                maxHeight="200px"
+                            />
+                        </div>
                     </div>
                 </div>
-            </header>
+                <!-- Action Buttons -->
+                <div class="mt-6 flex justify-end">
+                    <DangerButton
+                        :class="{ 'opacity-25': form.processing }"
+                        :disabled="form.processing"
+                        @click="deleteMedic"
+                    >
+                        Șterge
+                    </DangerButton>
+                    <SecondaryButton @click="closeModalDelete" class="ms-3">
+                        Închide
+                    </SecondaryButton>
+                </div>
+            </div>
         </Modal>
     </AuthenticatedLayout>
 </template>
