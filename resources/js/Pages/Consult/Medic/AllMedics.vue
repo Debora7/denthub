@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { defineProps, ref, computed, watch } from "vue";
+import { defineProps, ref, computed } from "vue";
 import Modal from "@/Components/Modal.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -420,22 +420,8 @@ const deleteMedic = () => {
                         </div>
 
                         <div>
-                            <!-- Image -->
-                            <div>
-                                <InputLabel for="image" value="Imagine" />
-                                <FileInput
-                                    id="image"
-                                    v-model="form.image"
-                                    @change="onFileChange"
-                                />
-                                <InputError
-                                    class="mt-2"
-                                    :message="form.errors.image"
-                                />
-                            </div>
-
                             <!-- Description -->
-                            <div class="mt-4">
+                            <div>
                                 <InputLabel
                                     for="description"
                                     value="Descriere"
@@ -449,6 +435,20 @@ const deleteMedic = () => {
                                 <InputError
                                     class="mt-2"
                                     :message="form.errors.description"
+                                />
+                            </div>
+
+                            <!-- Image -->
+                            <div class="mt-4">
+                                <InputLabel for="image" value="Imagine" />
+                                <FileInput
+                                    id="image"
+                                    v-model="form.image"
+                                    @change="onFileChange"
+                                />
+                                <InputError
+                                    class="mt-2"
+                                    :message="form.errors.image"
                                 />
                             </div>
 
