@@ -32,10 +32,15 @@ class MedicController extends Controller
 
         $user_id = auth()->id();
 
+        $workingDays = array_map(function ($day) {
+            $day['enabled'] = $day['enabled'] === '1' ? true : false;
+            return $day;
+        }, $request->workingDays);
+
         $doctor = new Doctor();
         $doctor->user_id = $user_id;
         $doctor->name = $request->doctor;
-        $doctor->working_days = json_encode($request->workingDays);
+        $doctor->working_days = json_encode($workingDays);
         $doctor->description = $request->description;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('images', 'public');
